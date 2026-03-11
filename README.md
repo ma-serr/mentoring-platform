@@ -4,7 +4,7 @@
 
 **A structured, open-source mentoring tool for academic research labs — designed with NIH training plan requirements in mind.**
 
-Built for the [Serrano Laboratory](https://serranolab.github.io/online/) at Boston University's Chobanian & Avedisian School of Medicine, Center for Regenerative Medicine (CReM).
+Built for the [Serrano Laboratory](https://www.serranolab.org) at Boston University's Chobanian & Avedisian School of Medicine, Center for Regenerative Medicine (CReM).
 
 ---
 
@@ -33,7 +33,8 @@ The mentor side is deliberately framed around **lab investment needs** rather th
 | **Professional Record** | Certificate tracker with PDF upload, publication & manuscript pipeline (Idea → Published with stage badges), conference & presentation log, teaching & outreach hours |
 | **Meeting Log** | 1:1 mentor meeting tracker with discussion notes and rolling action items — uncompleted items carry forward to the next meeting |
 | **Networking** | Contact tracker with organization, event, follow-up status, and aggregate stats |
-| **Export** | CSV (compatible with mentor import), Print/PDF, IDP summary text, CV components export, Formspree email submission |
+| **Career Timeline** | Interactive timeline builder for F-series fellowships and grant figures — customizable year columns, editable row categories (goals, effort allocation bars, activities, seminars, conferences), auto-totaling effort percentages, text and print/PDF export |
+| **Export** | CSV (compatible with mentor import), Print/PDF, IDP summary text, CV components export, career timeline export, Formspree email submission |
 
 ### Mentor / PI Portal
 
@@ -202,6 +203,7 @@ For bug reports or feature requests, please open an issue.
 | **v2.0** | 2026 | Unified platform with IDP builder, SMART goals, certificate tracker, reference paragraph builder |
 | **v2.1** | 2026 | Pedagogical redesign (removed comparison framing, added Mentoring Reflection), radar charts, drag-and-drop goals, certificate PDF uploads, SVG icon system, Source Sans 3 typography |
 | **v2.2** | 2026 | Sub-tab navigation, DAC milestone scheduler, publication pipeline, conference log, 1:1 meeting log with rolling action items, networking tracker, teaching & outreach hours, CV components export |
+| **v2.3** | 2026 | Career Timeline Builder for F-series fellowships and grant applications — customizable year columns, effort allocation bars, editable activity rows, auto-totaling, text export |
 
 ---
 
@@ -217,7 +219,7 @@ You are free to share and adapt this work for any purpose, including commerciall
 
 If you use this platform in a publication or grant application:
 
-> Serrano, M.A. & Claude (Anthropic). *Serrano Lab Mentoring & Training Platform* (v2.2). Boston University Center for Regenerative Medicine. 2026. Available at: https://github.com/ma-serr/mentoring-platform
+> Serrano, M.A. & Claude (Anthropic). *Serrano Lab Mentoring & Training Platform* (v2.3). Boston University Center for Regenerative Medicine. 2026. Available at: https://github.com/ma-serr/mentoring-platform
 
 ---
 
@@ -227,4 +229,4 @@ If you use this platform in a publication or grant application:
 Assistant Professor of Medicine
 Center for Regenerative Medicine (CReM)
 Boston University Chobanian & Avedisian School of Medicine
-[serranolab.org](https://serranolab.github.io/online/)
+[serranolab.org](https://www.serranolab.org)

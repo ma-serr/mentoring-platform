@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════════════════
-   SERRANO LAB MENTORING & TRAINING PLATFORM v2.2
+   SERRANO LAB MENTORING & TRAINING PLATFORM v2.3
    Concept & Content: Dr. Maria A. Serrano
    Implementation & UI/UX: Claude (Anthropic)
    ══════════════════════════════════════════════════════ */
@@ -32,14 +32,10 @@ body{font-family:var(--f-body);background:var(--surf);color:var(--ink);min-heigh
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .sec{background:var(--card);border:1px solid var(--brd);border-radius:var(--r-lg);padding:1.4rem 1.6rem;margin-bottom:1.1rem;box-shadow:var(--sh-sm)}
 .sec-h{display:flex;align-items:center;gap:.55rem;margin-bottom:.9rem;padding-bottom:.65rem;border-bottom:1px solid var(--brd-lt)}
-.sec-h .ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sec-h .ico svg{width:18px;height:18px;stroke-width:1.8}
-.ico.bl{background:var(--bl-wash)}.ico.bl svg{stroke:var(--bl)}
-.ico.or{background:var(--or-wash)}.ico.or svg{stroke:var(--or)}
-.ico.tl{background:var(--teal-wash)}.ico.tl svg{stroke:var(--teal)}
-.ico.gn{background:var(--grn-wash)}.ico.gn svg{stroke:var(--grn)}
-.ico.yl{background:var(--ylw-wash)}.ico.yl svg{stroke:#b8860b}
-.ico.pp{background:var(--purple-wash)}.ico.pp svg{stroke:var(--purple)}
+.sec-h .ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:none}
+.sec-h .ico svg{width:20px;height:20px;stroke-width:1.6;stroke:var(--bl-deep);fill:none}
+.ico.bl,.ico.or,.ico.tl,.ico.gn,.ico.yl,.ico.pp{background:none}
+.ico.bl svg,.ico.or svg,.ico.tl svg,.ico.gn svg,.ico.yl svg,.ico.pp svg{stroke:var(--bl-deep)}
 .sec-h h2{font-family:var(--f-display);font-size:1.08rem;font-weight:700;color:var(--bl-deep)}
 .sec-h .sub{font-size:.8rem;color:var(--ink-mt)}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem}
@@ -130,8 +126,47 @@ body{font-family:var(--f-body);background:var(--surf);color:var(--ink);min-heigh
 .net-info{flex:1;min-width:0}.net-info .net-name{font-weight:600;font-size:.9rem}.net-info .net-meta{font-size:.78rem;color:var(--ink-mt)}
 .net-followup{font-size:.76rem;padding:.12rem .4rem;border-radius:10px;font-weight:600}
 .net-fu-pending{background:var(--or-wash);color:var(--or)}.net-fu-done{background:var(--grn-wash);color:var(--grn)}.net-fu-none{background:#f0f4f8;color:var(--ink-mt)}
+/* Career Timeline Builder — refined */
+.tl-builder{overflow-x:auto;margin:.8rem 0}
+.tl-table{width:100%;border-collapse:collapse;font-size:.84rem;min-width:720px}
+.tl-table th,.tl-table td{border:1px solid var(--brd);padding:.6rem .7rem;vertical-align:top;text-align:left}
+.tl-table thead th{background:var(--bl-ghost);color:var(--bl-deep);font-weight:600;font-size:.8rem;letter-spacing:.02em}
+.tl-table th:first-child{width:180px;min-width:165px}
+.tl-table td:first-child{font-weight:600;color:var(--ink-lt);font-size:.82rem;background:#fafcfe}
+.tl-table tbody tr{transition:background .12s}
+.tl-table tbody tr:hover{background:rgba(33,118,174,.02)}
+.tl-table textarea{width:100%;min-height:50px;font-family:var(--f-body);font-size:.82rem;border:1px solid transparent;border-radius:5px;padding:.4rem .5rem;resize:vertical;background:transparent;transition:border-color .15s,background .15s;line-height:1.5}
+.tl-table textarea:hover{border-color:var(--brd)}
+.tl-table textarea:focus{border-color:var(--bl);background:#fff}
+.tl-table textarea::placeholder{color:#c4ced8;font-style:italic}
+.tl-eff{display:flex;align-items:center;gap:.6rem;padding:.15rem 0;cursor:pointer;position:relative}
+.tl-eff-bar-bg{flex:1;background:#ecf0f4;border-radius:20px;height:7px;overflow:hidden;transition:box-shadow .15s}
+.tl-eff:hover .tl-eff-bar-bg{box-shadow:0 0 0 2px rgba(33,118,174,.1)}
+.tl-eff-bar{height:7px;border-radius:20px;transition:width .15s ease}
+.tl-eff-pct{font-size:.78rem;font-weight:600;color:var(--ink-lt);min-width:32px;text-align:right}
+.tl-slider-pop{display:none;position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--brd);border-radius:8px;box-shadow:var(--sh-md);padding:.5rem .7rem;z-index:30;margin-top:.2rem}
+.tl-slider-pop.open{display:flex;align-items:center;gap:.5rem}
+.tl-slider-pop input[type="range"]{flex:1;accent-color:var(--bl)}
+.tl-slider-pop .tl-sp-val{font-size:.82rem;font-weight:700;color:var(--bl);min-width:34px;text-align:center}
+.tl-header-input{font-family:var(--f-body);font-size:.82rem;font-weight:600;border:1px solid transparent;background:transparent;color:var(--bl-deep);padding:.25rem .4rem;border-radius:5px;width:100%;transition:border-color .15s,background .15s}
+.tl-header-input:hover{border-color:var(--brd)}
+.tl-header-input:focus{border-color:var(--bl);background:#fff;outline:none}
+.tl-row-lbl{display:flex;align-items:center;gap:.15rem}
+.tl-row-lbl .tl-x{opacity:0;font-size:.68rem;color:var(--ink-mt);border:none;background:none;cursor:pointer;transition:opacity .15s,color .15s;padding:.1rem .2rem;line-height:1}
+.tl-table tbody tr:hover .tl-x{opacity:.5}
+.tl-row-lbl .tl-x:hover{opacity:1;color:var(--red)}
+.tl-total td{font-weight:700;background:var(--bl-ghost);text-align:center;font-size:.88rem;border-top:2px solid var(--brd);letter-spacing:.01em}
+.tl-title-row th{text-align:center;font-size:1rem;padding:.75rem 1rem;background:var(--bl-deep);color:#fff;text-transform:none;letter-spacing:0;font-family:var(--f-display);line-height:1.3}
+.tl-legend{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1rem;font-size:.78rem;color:var(--ink-mt);align-items:center}
+.tl-legend span{display:flex;align-items:center;gap:.25rem}
+.tl-legend .dot{width:7px;height:7px;border-radius:50%}
+.cite-box{max-width:720px;margin:1.5rem auto 0;background:linear-gradient(135deg,#f8fafd,#eef4f8);border:1px solid var(--brd);border-left:4px solid var(--bl);border-radius:var(--r-md);padding:1.1rem 1.4rem}
+.cite-box h4{font-family:var(--f-display);font-size:.92rem;color:var(--bl-deep);margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
+.cite-box h4 svg{width:16px;height:16px;stroke:var(--bl-deep);fill:none;stroke-width:1.8;flex-shrink:0}
+.cite-box p{font-size:.82rem;color:var(--ink-lt);line-height:1.6;margin-bottom:.3rem}
+.cite-box code{display:block;background:var(--card);border:1px solid var(--brd);border-radius:6px;padding:.55rem .75rem;margin-top:.4rem;font-size:.78rem;line-height:1.7;color:var(--ink);font-family:'SFMono-Regular',Consolas,monospace;white-space:pre-wrap;word-break:break-word}
 .credits{text-align:center;padding:1.8rem 1rem;font-size:.76rem;color:var(--ink-mt);border-top:1px solid var(--brd-lt);margin-top:1.5rem}.credits strong{color:var(--ink-lt)}
-body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{background:#161b22!important}body.hc .portal-nav,body.hc .sec,body.hc .tcard,body.hc .stc,body.hc .modal-bx,body.hc .acc-body,body.hc .ref-b,body.hc .fg input,body.hc .fg select,body.hc .fg textarea,body.hc .dtbl thead th,body.hc .hm th,body.hc .goal-card,body.hc .refl-card,body.hc .pipe-card,body.hc .mtg-card,body.hc .net-card{background:#161b22!important;color:#e6edf3!important;border-color:#30363d!important}body.hc .ptab,body.hc .stab,body.hc .sec-h h2,body.hc .stc .sl,body.hc .tc-n{color:#58a6ff!important}body.hc .btn-p{background:#238636!important}
+body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{background:#161b22!important}body.hc .portal-nav,body.hc .sec,body.hc .tcard,body.hc .stc,body.hc .modal-bx,body.hc .acc-body,body.hc .ref-b,body.hc .fg input,body.hc .fg select,body.hc .fg textarea,body.hc .dtbl thead th,body.hc .hm th,body.hc .goal-card,body.hc .refl-card,body.hc .pipe-card,body.hc .mtg-card,body.hc .net-card{background:#161b22!important;color:#e6edf3!important;border-color:#30363d!important}body.hc .ptab,body.hc .stab,body.hc .sec-h h2,body.hc .stc .sl,body.hc .tc-n{color:#58a6ff!important}body.hc .btn-p{background:#238636!important}body.hc .tl-table th,body.hc .tl-table td,body.hc .tl-header-input{background:#161b22!important;color:#e6edf3!important;border-color:#30363d!important}
 @media print{.topbar,.portal-nav,.brow,.no-print,.stabs{display:none!important}.pnl,.spnl{display:block!important;padding:0;max-width:100%}.sec{break-inside:avoid;box-shadow:none;border:1px solid #ddd}body{background:#fff;font-size:10pt}}
 @media(max-width:768px){.topbar{padding:.5rem .8rem}.topbar h1{font-size:.95rem}.pnl{padding:.8rem}.fgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.tgrid{grid-template-columns:1fr}.ptab{padding:.6rem .9rem;font-size:.82rem}.stab{padding:.45rem .7rem;font-size:.78rem}}
 </style>
@@ -142,7 +177,7 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     <div class="topbar-logo"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6m0 8v6M8 4c0 2 2 4 4 4s4-2 4-4M8 20c0-2 2-4 4-4s4 2 4 4M6 12h4m4 0h4"/><circle cx="12" cy="12" r="2"/></svg></div>
     <h1>Serrano Lab <span>| Mentoring Platform</span></h1>
   </div>
-  <div class="topbar-r"><label><input type="checkbox" id="hc-toggle"> High Contrast</label><span style="opacity:.5">v2.2</span></div>
+  <div class="topbar-r"><label><input type="checkbox" id="hc-toggle"> High Contrast</label><span style="opacity:.5">v2.3</span></div>
 </header>
 <nav class="portal-nav">
   <button class="ptab active" data-portal="mentee"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>Mentee</button>
@@ -158,6 +193,7 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     <button class="stab" data-msub="m-record">Professional Record</button>
     <button class="stab" data-msub="m-meetings">Meeting Log</button>
     <button class="stab" data-msub="m-network">Networking</button>
+    <button class="stab" data-msub="m-timeline">Career Timeline</button>
     <button class="stab" data-msub="m-export">Export</button>
   </div>
 
@@ -274,6 +310,52 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     </div>
   </div>
 
+  <!-- ── CAREER TIMELINE ── -->
+  <div class="spnl" id="m-timeline">
+    <div class="sec">
+      <div class="sec-h">
+        <div class="ico pp"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>
+        <div><h2>Career Timeline Builder</h2><div class="sub">Build a customizable training timeline for F-series fellowships, DAC presentations, and grant applications</div></div>
+      </div>
+
+      <!-- Setup -->
+      <div class="fgrid" style="margin-bottom:1rem">
+        <div class="fg"><label>Timeline Title</label><input type="text" id="tl-title" placeholder="e.g. F30 MD/PhD Fellowship | Sandeep Sreerama" onchange="renderTL();dsTL()"></div>
+        <div class="fg"><label>Number of Year Columns</label>
+          <select id="tl-ncols" onchange="adjustTLCols();renderTL();dsTL()">
+            <option value="3">3 Years</option>
+            <option value="4" selected>4 Years</option>
+            <option value="5">5 Years</option>
+            <option value="6">6 Years</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Timeline Table -->
+      <div class="tl-builder" id="tl-wrap"></div>
+
+      <!-- Legend -->
+      <div class="tl-legend">
+        <span><span class="dot" style="background:var(--bl)"></span> Research effort</span>
+        <span><span class="dot" style="background:var(--teal)"></span> Clinical effort</span>
+        <span><span class="dot" style="background:var(--or)"></span> Activities / Other</span>
+        <span style="margin-left:auto;font-style:italic">Tip: Edit column headers, row labels, and cell content directly in the table</span>
+      </div>
+
+      <!-- Row management -->
+      <div class="brow">
+        <button class="btn btn-pp btn-sm" onclick="addTLRow()">+ Add Row</button>
+        <button class="btn btn-ol btn-sm" onclick="resetTLToDefault()">Reset to Template</button>
+      </div>
+
+      <!-- Export -->
+      <div class="brow" style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--brd-lt)">
+        <button class="btn btn-p" onclick="exportTLPrint()">Print Timeline / PDF</button>
+        <button class="btn btn-ol" onclick="exportTLText()">Export as Text</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── EXPORT ── -->
   <div class="spnl" id="m-export">
     <div class="sec">
@@ -285,6 +367,7 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
         <button class="btn btn-o" onclick="sendProgress()">Send to Mentor</button>
         <button class="btn btn-ol" onclick="exportIDP()">Full IDP Summary</button>
         <button class="btn btn-pp" onclick="exportCV()">CV Components Export</button>
+        <button class="btn btn-ol" onclick="exportTLText()">Career Timeline Export</button>
       </div>
     </div>
   </div>
@@ -347,16 +430,24 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     <h3 style="font-family:var(--f-display);margin:1.2rem 0 .4rem;color:var(--bl-deep)">Contributions & Credits</h3>
     <table class="dtbl" style="max-width:680px"><thead><tr><th>Contributor</th><th>Role</th><th>Contributions</th></tr></thead><tbody>
       <tr><td><strong>Dr. Maria A. Serrano</strong></td><td>Creator & Content</td><td>Conceptual design, training framework (7 domains, 50+ skills), competency taxonomy, mentoring pedagogy, IDP/NIH/DAC alignment, reflection prompts, all domain content, pedagogical direction</td></tr>
-      <tr><td><strong>Claude (Anthropic)</strong></td><td>Development Partner</td><td>UI/UX design, front-end code, data architecture, CSV pipeline, radar charts, reference builder, localStorage persistence, networking tracker, publication pipeline, meeting log, milestone scheduler, v2.2 professional record system</td></tr>
+      <tr><td><strong>Claude (Anthropic)</strong></td><td>Development Partner</td><td>UI/UX design, front-end code, data architecture, CSV pipeline, radar charts, reference builder, localStorage persistence, networking tracker, publication pipeline, meeting log, milestone scheduler, v2.3 professional record system</td></tr>
     </tbody></table>
     <h3 style="font-family:var(--f-display);margin:1.2rem 0 .4rem;color:var(--bl-deep)">Version History</h3>
-    <p style="line-height:1.8;max-width:680px;font-size:.9rem"><strong>v1.0</strong> — Separate Mentee Matrix & PI Dashboard.<br><strong>v2.0</strong> — Unified platform, IDP builder, SMART goals, reference builder.<br><strong>v2.1</strong> — Pedagogical redesign, mentoring reflection, radar charts, drag-drop goals, cert uploads.<br><strong>v2.2</strong> — Sub-tab navigation, DAC milestone scheduler, publication pipeline, conference log, 1:1 meeting log with rolling action items, networking tracker, teaching hours, CV components export.</p>
+    <p style="line-height:1.8;max-width:680px;font-size:.9rem"><strong>v1.0</strong> — Separate Mentee Matrix & PI Dashboard.<br><strong>v2.0</strong> — Unified platform, IDP builder, SMART goals, reference builder.<br><strong>v2.1</strong> — Pedagogical redesign, mentoring reflection, radar charts, drag-drop goals, cert uploads.<br><strong>v2.3</strong> — Sub-tab navigation, DAC milestone scheduler, publication pipeline, conference log, 1:1 meeting log with rolling action items, networking tracker, teaching hours, CV components export, career timeline builder.</p>
+
+    <div class="cite-box">
+      <h4><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> If you use or adapt this tool, please cite</h4>
+      <p>This platform is shared under CC BY 4.0. You are free to use and adapt it for your own lab, provided you give appropriate attribution.</p>
+      <code>Serrano, M.A. &amp; Claude (Anthropic). Serrano Lab Mentoring &amp; Training Platform.
+Boston University Center for Regenerative Medicine. 2025–2026.
+https://github.com/ma-serr/mentoring-platform</code>
+    </div>
   </div>
 </div>
 
 <div class="modal-ov" id="modal-ov"><div class="modal-bx" id="modal-bx"></div></div>
 <form id="matrixForm" action="https://formspree.io/f/xkgbpjoz" method="POST" style="display:none"><input type="email" name="email" id="fEmail"><textarea name="matrixCSV" id="fCSV"></textarea></form>
-<footer class="credits"><strong>Serrano Lab Mentoring & Training Platform v2.2</strong><br>Concept & Content: Dr. Maria A. Serrano · Implementation: Claude (Anthropic)<br>Boston University · Chobanian & Avedisian School of Medicine · Center for Regenerative Medicine</footer>
+<footer class="credits"><strong>Serrano Lab Mentoring & Training Platform v2.3</strong><br>Concept & Content: Dr. Maria A. Serrano · Implementation: Claude (Anthropic)<br>Boston University · Chobanian & Avedisian School of Medicine · Center for Regenerative Medicine</footer>
 
 <script>
 /* ═══════════════════════════════════════════════════════════
@@ -547,6 +638,7 @@ t+=`\n${'─'.repeat(50)}\nCERTIFICATES\n${'─'.repeat(50)}\n`;mCerts.forEach(c
 if(mPubs.length){t+=`\n${'─'.repeat(50)}\nPUBLICATION PIPELINE\n${'─'.repeat(50)}\n`;mPubs.forEach(p=>{t+=`• [${p.stage}] ${p.title||'Untitled'}${p.journal?' — '+p.journal:''}${p.doi?' DOI:'+p.doi:''}\n`})}
 if(mConfs.length){t+=`\n${'─'.repeat(50)}\nCONFERENCES & PRESENTATIONS\n${'─'.repeat(50)}\n`;mConfs.forEach(c=>{t+=`• ${c.date||''} ${c.type}${c.invited?' (invited)':''}: ${c.title||''}${c.venue?' — '+c.venue:''}\n`})}
 if(mTeach.length){t+=`\n${'─'.repeat(50)}\nTEACHING & OUTREACH\n${'─'.repeat(50)}\n`;const totalH=mTeach.reduce((s,x)=>s+(+x.hours||0),0);t+=`Total hours: ${totalH}\n`;mTeach.forEach(x=>{t+=`• ${x.date||''} ${x.role}: ${x.activity||''} (${x.hours||0}h)\n`})}
+if(tlData&&tlData.rows.length){t+=`\n${'─'.repeat(50)}\nCAREER TIMELINE\n${'─'.repeat(50)}\n`;if(tlData.title)t+=tlData.title+'\n\n';tlData.cols.forEach((col,ci)=>{t+=`${col.replace(/\n/g,' ')}:\n`;tlData.rows.forEach(row=>{if(row.type==='effort')t+=`  ${row.label}: ${row.cells[ci]}%\n`;else if(row.cells[ci])t+=`  ${row.label}: ${row.cells[ci].replace(/\n/g,'; ')}\n`});t+='\n'})}
 t+=`\n${'─'.repeat(50)}\nTRAINING PROGRESS\n${'─'.repeat(50)}\n`;let tA=0,dA=0;MA.forEach((_,ai)=>{const bd=$(`abody-${ai}`);if(!bd)return;const ck=bd.querySelectorAll('.myr');const d=[...ck].filter(c=>c.checked).length;if(ck.length){t+=`${MA[ai].group}: ${Math.round(d/ck.length*100)}%\n`;tA+=ck.length;dA+=d}});
 t+=`\nOverall: ${tA?Math.round(dA/tA*100):0}%\nGenerated: ${new Date().toLocaleDateString()}\n`;dlText(t,`IDP_${nm.replace(/\s+/g,'_')}_${today()}.txt`)}
 function exportCV(){const nm=$('m-name').value.trim()||'Trainee';let t=`CV COMPONENTS — ${nm}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
@@ -612,10 +704,222 @@ function piImNotes(){const inp=document.createElement('input');inp.type='file';i
 function piClear(){if(confirm('Clear all?')){piT=[];piCSV=[];piN={};piMG={};piActions=[];localStorage.removeItem(PI_KEY);$('pi-cards').innerHTML='';$('pi-hm').innerHTML='';$('mg-list').innerHTML='';$('pi-actions').innerHTML='';popSels();['ps-avg','ps-gaps'].forEach(id=>$(id).textContent='—');$('ps-n').textContent='0';$('ps-blocked').textContent='0'}}
 $('pf-lev').addEventListener('change',renderPI);$('pf-area').addEventListener('change',renderPI);
 
+/* ═══════════════════════════════════════
+   CAREER TIMELINE BUILDER
+   ═══════════════════════════════════════ */
+const TL_KEY='serrano_timeline_v1';
+let tlData=null;
+
+function defaultTL(){
+  return {
+    title:'',
+    cols:['PhD Year 4\n05/2026–04/2027','PhD Year 5\n05/2027–04/2028','MD Year 3\n05/2028–04/2029','MD Year 4\n05/2029–05/2030'],
+    rows:[
+      {label:'Fellowship Training Goals & Deliverables',type:'text',cells:['','','','']},
+      {label:'Research (%)',type:'effort',effortKey:'research',color:'var(--bl)',cells:[80,75,0,20]},
+      {label:'Clinical (%)',type:'effort',effortKey:'clinical',color:'var(--teal)',cells:[5,10,95,70]},
+      {label:'Activities (%)',type:'effort',effortKey:'activities',color:'var(--or)',cells:[15,15,5,10]},
+      {label:'Research & Clinical Training',type:'text',cells:['','','','']},
+      {label:'Seminars & Coursework',type:'text',cells:['','','','']},
+      {label:'Meetings & Conferences',type:'text',cells:['','','','']},
+    ]
+  };
+}
+
+function loadTL(){
+  try{const s=JSON.parse(localStorage.getItem(TL_KEY));if(s){tlData=s;$('tl-title').value=s.title||'';$('tl-ncols').value=String(s.cols.length);return}}catch(e){}
+  tlData=defaultTL();
+}
+
+let tlTimer;function dsTL(){clearTimeout(tlTimer);tlTimer=setTimeout(saveTL,500)}
+
+function saveTL(){
+  if(!tlData)return;
+  // Read current state from DOM
+  tlData.title=$('tl-title').value;
+  // Read column headers
+  document.querySelectorAll('.tl-col-hdr').forEach((inp,i)=>{if(tlData.cols[i]!==undefined)tlData.cols[i]=inp.value});
+  // Read rows
+  tlData.rows.forEach((row,ri)=>{
+    const lbl=document.querySelector(`[data-row-label="${ri}"]`);
+    if(lbl)row.label=lbl.value;
+    if(row.type==='text'){
+      row.cells.forEach((_,ci)=>{
+        const ta=document.querySelector(`[data-cell="${ri}-${ci}"]`);
+        if(ta)row.cells[ci]=ta.value;
+      });
+    }else if(row.type==='effort'){
+      row.cells.forEach((_,ci)=>{
+        const sl=document.querySelector(`[data-slider="${ri}-${ci}"]`);
+        if(sl)row.cells[ci]=parseInt(sl.value)||0;
+      });
+    }
+  });
+  try{localStorage.setItem(TL_KEY,JSON.stringify(tlData))}catch(e){console.warn('TL save',e)}
+}
+
+function adjustTLCols(){
+  const n=parseInt($('tl-ncols').value)||4;
+  if(!tlData)tlData=defaultTL();
+  while(tlData.cols.length<n)tlData.cols.push('Year '+(tlData.cols.length+1));
+  while(tlData.cols.length>n)tlData.cols.pop();
+  tlData.rows.forEach(row=>{
+    while(row.cells.length<n)row.cells.push(row.type==='effort'?0:'');
+    while(row.cells.length>n)row.cells.pop();
+  });
+}
+
+function renderTL(){
+  if(!tlData)return;
+  const nc=tlData.cols.length;
+  const w=$('tl-wrap');
+
+  let h=`<table class="tl-table"><thead>`;
+  if(tlData.title){
+    h+=`<tr class="tl-title-row"><th colspan="${nc+1}">${esc(tlData.title)}</th></tr>`;
+  }
+  h+=`<tr><th></th>`;
+  tlData.cols.forEach((col,ci)=>{
+    h+=`<th><textarea class="tl-col-hdr tl-header-input" data-col="${ci}" rows="2" onchange="dsTL()" style="min-height:36px;text-align:center">${esc(col)}</textarea></th>`;
+  });
+  h+=`</tr></thead><tbody>`;
+
+  tlData.rows.forEach((row,ri)=>{
+    h+=`<tr><td><div class="tl-row-lbl">
+      <input class="tl-header-input" data-row-label="${ri}" value="${esc(row.label)}" onchange="dsTL()">
+      <button class="tl-x" onclick="removeTLRow(${ri})" title="Remove row">&times;</button>
+    </div></td>`;
+
+    if(row.type==='effort'){
+      row.cells.forEach((val,ci)=>{
+        h+=`<td>
+          <div class="tl-eff" onclick="toggleSlider(${ri},${ci})">
+            <div class="tl-eff-bar-bg"><div class="tl-eff-bar" data-eff-bar="${ri}-${ci}" style="width:${val}%;background:${row.color||'var(--bl)'}"></div></div>
+            <span class="tl-eff-pct" data-eff-pct="${ri}-${ci}">${val}%</span>
+            <div class="tl-slider-pop" id="tl-sp-${ri}-${ci}" onclick="event.stopPropagation()">
+              <input type="range" min="0" max="100" step="5" value="${val}" data-slider="${ri}-${ci}" oninput="updateEffortBar(${ri},${ci},this.value);dsTL()">
+              <span class="tl-sp-val" data-sp-val="${ri}-${ci}">${val}%</span>
+            </div>
+          </div>
+        </td>`;
+      });
+    }else{
+      row.cells.forEach((val,ci)=>{
+        h+=`<td><textarea data-cell="${ri}-${ci}" onchange="dsTL()" placeholder="Enter milestones, activities...">${esc(val)}</textarea></td>`;
+      });
+    }
+    h+=`</tr>`;
+  });
+
+  h+=`<tr class="tl-total"><td>Total Effort (%)</td>`;
+  for(let ci=0;ci<nc;ci++){
+    let sum=0;tlData.rows.forEach(r=>{if(r.type==='effort')sum+=(r.cells[ci]||0)});
+    const color=sum===100?'var(--grn)':sum>100?'var(--red)':'var(--or)';
+    h+=`<td style="color:${color}">${sum}%</td>`;
+  }
+  h+=`</tr></tbody></table>`;
+  w.innerHTML=h;
+}
+
+function toggleSlider(ri,ci){
+  const pop=$(`tl-sp-${ri}-${ci}`);if(!pop)return;
+  const isOpen=pop.classList.contains('open');
+  document.querySelectorAll('.tl-slider-pop.open').forEach(p=>p.classList.remove('open'));
+  if(!isOpen)pop.classList.add('open');
+}
+
+function updateEffortBar(ri,ci,val){
+  val=parseInt(val)||0;
+  const pct=document.querySelector(`[data-eff-pct="${ri}-${ci}"]`);
+  const bar=document.querySelector(`[data-eff-bar="${ri}-${ci}"]`);
+  const spv=document.querySelector(`[data-sp-val="${ri}-${ci}"]`);
+  if(pct)pct.textContent=val+'%';
+  if(bar)bar.style.width=val+'%';
+  if(spv)spv.textContent=val+'%';
+}
+// Close slider popovers on outside click
+document.addEventListener('click',e=>{if(!e.target.closest('.tl-eff'))document.querySelectorAll('.tl-slider-pop.open').forEach(p=>p.classList.remove('open'))});
+
+function addTLRow(){
+  if(!tlData)return;
+  const nc=tlData.cols.length;
+  // Ask type
+  const type=confirm('Add an effort allocation row?\n(OK = Effort bar row, Cancel = Text/activity row)')?'effort':'text';
+  const label=prompt('Row label:','New Row');
+  if(!label)return;
+  const row={label,type,cells:Array(nc).fill(type==='effort'?0:'')};
+  if(type==='effort'){row.effortKey=label.toLowerCase().replace(/\s+/g,'_');row.color='var(--bl)'}
+  tlData.rows.push(row);
+  renderTL();dsTL();
+}
+
+function removeTLRow(ri){
+  if(!tlData||!confirm('Remove this row?'))return;
+  tlData.rows.splice(ri,1);
+  renderTL();dsTL();
+}
+
+function resetTLToDefault(){
+  if(!confirm('Reset timeline to the default template? Current data will be lost.'))return;
+  tlData=defaultTL();
+  $('tl-title').value='';$('tl-ncols').value='4';
+  renderTL();dsTL();
+}
+
+function exportTLPrint(){
+  // Save current state first
+  saveTL();
+  // Open print targeting the timeline
+  window.print();
+}
+
+function exportTLText(){
+  saveTL();
+  if(!tlData)return;
+  const nc=tlData.cols.length;
+  let t=`${tlData.title||'Career Timeline'}\n${'═'.repeat(60)}\n\n`;
+
+  // Column headers
+  t+=`${'Category'.padEnd(30)}`;
+  tlData.cols.forEach(c=>{t+=`| ${c.replace(/\n/g,' ').padEnd(25)}`});
+  t+='\n'+('─'.repeat(30))+tlData.cols.map(()=>'+'+'─'.repeat(26)).join('')+'\n';
+
+  // Rows
+  tlData.rows.forEach(row=>{
+    if(row.type==='effort'){
+      t+=`${row.label.padEnd(30)}`;
+      row.cells.forEach(v=>{t+=`| ${(v+'%').padEnd(25)}`});
+      t+='\n';
+    }else{
+      // Text rows may have multi-line content
+      const maxLines=Math.max(1,...row.cells.map(c=>(c||'').split('\n').length));
+      for(let ln=0;ln<maxLines;ln++){
+        t+=`${(ln===0?row.label:'').padEnd(30)}`;
+        row.cells.forEach(c=>{
+          const lines=(c||'').split('\n');
+          t+=`| ${(lines[ln]||'').padEnd(25)}`;
+        });
+        t+='\n';
+      }
+    }
+    t+=('─'.repeat(30))+tlData.cols.map(()=>'+'+'─'.repeat(26)).join('')+'\n';
+  });
+
+  // Totals
+  t+=`${'Total Effort (%)'.padEnd(30)}`;
+  for(let ci=0;ci<nc;ci++){
+    let sum=0;tlData.rows.forEach(r=>{if(r.type==='effort')sum+=(r.cells[ci]||0)});
+    t+=`| ${(sum+'%').padEnd(25)}`;
+  }
+  t+='\n\nGenerated: '+new Date().toLocaleDateString()+'\n';
+  dlText(t,`career_timeline_${today()}.txt`);
+}
+
 /* ═══ INIT ═══ */
 window.addEventListener('DOMContentLoaded',()=>{
   const loaded=loadM();if(!loaded)buildMMatrix();
   renderGoals();renderCerts();renderPubs();renderConfs();renderTeach();renderMtgs();renderMS();renderNet();
+  loadTL();renderTL();
   loadPI();
 });
 </script>
