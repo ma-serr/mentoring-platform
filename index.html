@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Serrano Lab | Mentoring & Training Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════
+   SERRANO LAB MENTORING & TRAINING PLATFORM v2.2
+   Concept & Content: Dr. Maria A. Serrano
+   Implementation & UI/UX: Claude (Anthropic)
+   ══════════════════════════════════════════════════════ */
+:root{--ink:#1a2332;--ink-lt:#4a5c72;--ink-mt:#8a97a8;--bl-deep:#1a4f7a;--bl:#2176ae;--bl-br:#45c5e2;--bl-wash:#e8f4f8;--bl-ghost:#f4fafc;--or:#e8723a;--or-warm:#f49d6e;--or-wash:#fef3ec;--teal:#2a9d8f;--teal-wash:#e6f5f3;--red:#e76f51;--grn:#52b788;--grn-wash:#edf7f0;--ylw:#e9c46a;--ylw-wash:#fdf8ec;--purple:#7c3aed;--purple-wash:#f3f0ff;--surf:#f8fafd;--card:#fff;--brd:#e2e8f0;--brd-lt:#f0f4f8;--sh-sm:0 1px 3px rgba(26,35,50,.06);--sh-md:0 4px 16px rgba(26,35,50,.08);--sh-lg:0 8px 32px rgba(26,35,50,.12);--r-sm:8px;--r-md:14px;--r-lg:20px;--f-display:'Bitter',Georgia,serif;--f-body:'Source Sans 3','Source Sans Pro',system-ui,sans-serif;--ease:.2s cubic-bezier(.4,0,.2,1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:var(--f-body);background:var(--surf);color:var(--ink);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased}
+.topbar{background:linear-gradient(135deg,var(--bl-deep),#1e5f8e 50%,var(--bl));color:#fff;padding:.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(26,79,122,.25)}
+.topbar-brand{display:flex;align-items:center;gap:.6rem}
+.topbar-logo{width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.topbar-logo svg{width:28px;height:28px;stroke:#fff;fill:none}
+.topbar h1{font-family:var(--f-display);font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
+.topbar h1 span{color:var(--bl-br);font-weight:400}
+.topbar-r{display:flex;align-items:center;gap:1rem;font-size:.8rem}
+.topbar-r label{opacity:.85;cursor:pointer;display:flex;align-items:center;gap:.3rem}
+.portal-nav{display:flex;justify-content:center;background:var(--card);border-bottom:1px solid var(--brd);position:sticky;top:52px;z-index:90}
+.ptab{padding:.8rem 2rem;font-family:var(--f-body);font-size:.92rem;font-weight:500;color:var(--ink-mt);border:none;background:none;cursor:pointer;position:relative;transition:color var(--ease);display:flex;align-items:center;gap:.45rem}
+.ptab:hover{color:var(--ink)}.ptab.active{color:var(--bl);font-weight:700}
+.ptab.active::after{content:'';position:absolute;bottom:0;left:.6rem;right:.6rem;height:3px;background:var(--bl);border-radius:3px 3px 0 0}
+.ptab svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}
+.pnl{display:none;padding:1.4rem 1.8rem 3rem;max-width:1200px;margin:0 auto}
+.pnl.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sec{background:var(--card);border:1px solid var(--brd);border-radius:var(--r-lg);padding:1.4rem 1.6rem;margin-bottom:1.1rem;box-shadow:var(--sh-sm)}
+.sec-h{display:flex;align-items:center;gap:.55rem;margin-bottom:.9rem;padding-bottom:.65rem;border-bottom:1px solid var(--brd-lt)}
+.sec-h .ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-h .ico svg{width:18px;height:18px;stroke-width:1.8}
+.ico.bl{background:var(--bl-wash)}.ico.bl svg{stroke:var(--bl)}
+.ico.or{background:var(--or-wash)}.ico.or svg{stroke:var(--or)}
+.ico.tl{background:var(--teal-wash)}.ico.tl svg{stroke:var(--teal)}
+.ico.gn{background:var(--grn-wash)}.ico.gn svg{stroke:var(--grn)}
+.ico.yl{background:var(--ylw-wash)}.ico.yl svg{stroke:#b8860b}
+.ico.pp{background:var(--purple-wash)}.ico.pp svg{stroke:var(--purple)}
+.sec-h h2{font-family:var(--f-display);font-size:1.08rem;font-weight:700;color:var(--bl-deep)}
+.sec-h .sub{font-size:.8rem;color:var(--ink-mt)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem}
+.fg{display:flex;flex-direction:column;gap:.2rem}
+.fg label{font-size:.76rem;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.04em}
+.fg input,.fg select,.fg textarea{font-family:var(--f-body);font-size:.9rem;padding:.45rem .7rem;border:1.5px solid var(--brd);border-radius:var(--r-sm);background:var(--bl-ghost);color:var(--ink);transition:border-color var(--ease),box-shadow var(--ease);outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(33,118,174,.12)}
+.fg textarea{resize:vertical;min-height:60px}
+.btn{font-family:var(--f-body);font-size:.84rem;font-weight:600;padding:.48rem 1.1rem;border-radius:var(--r-sm);border:none;cursor:pointer;transition:all var(--ease);display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}
+.btn-p{background:var(--bl);color:#fff}.btn-p:hover{background:var(--bl-deep);transform:translateY(-1px);box-shadow:var(--sh-md)}
+.btn-o{background:var(--or);color:#fff}.btn-o:hover{background:#d4632e}
+.btn-t{background:var(--teal);color:#fff}.btn-t:hover{background:#238b7e}
+.btn-pp{background:var(--purple);color:#fff}.btn-pp:hover{background:#6d28d9}
+.btn-ol{background:transparent;color:var(--bl);border:1.5px solid var(--bl)}.btn-ol:hover{background:var(--bl-wash)}
+.btn-gh{background:transparent;color:var(--ink-mt);padding:.3rem .6rem;font-size:.8rem}.btn-gh:hover{color:var(--red);background:rgba(231,111,81,.08)}
+.btn-sm{font-size:.79rem;padding:.35rem .85rem}
+.brow{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.7rem}
+.bdg{display:inline-flex;align-items:center;padding:.15rem .55rem;border-radius:20px;font-size:.76rem;font-weight:600;gap:.2rem}
+.bdg-ns{background:#f0f4f8;color:#4a6fa5;border:1px solid #d1dbe8}
+.bdg-ip{background:#eef6f4;color:#287d6c;border:1px solid #d2e8e4}
+.bdg-bk{background:#fff1f1;color:#b33434;border:1px solid #f5cdcd}
+.bdg-nr{background:#fffbf0;color:#a87f1a;border:1px solid #f2e4c1}
+.bdg-ok{background:#edf7ed;color:#2b723f;border:1px solid #d3e8d3}
+.bdg-pp{background:var(--purple-wash);color:var(--purple);border:1px solid #d4c8f5}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.7rem;margin-bottom:.9rem}
+.stc{background:var(--card);border:1px solid var(--brd);border-radius:var(--r-md);padding:.85rem;text-align:center;box-shadow:var(--sh-sm)}
+.stc .sv{font-size:1.6rem;font-weight:700;font-family:var(--f-display);color:var(--or)}
+.stc .sl{font-size:.74rem;color:var(--ink-mt);text-transform:uppercase;letter-spacing:.03em;margin-top:.15rem}
+.acc-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:linear-gradient(135deg,var(--bl),var(--bl-deep));color:#fff;border:none;border-radius:var(--r-sm);font-family:var(--f-body);font-size:.9rem;font-weight:600;cursor:pointer;transition:filter var(--ease)}
+.acc-btn:hover{filter:brightness(1.1)}.acc-btn .arr{transition:transform .2s;font-size:.75rem}.acc-btn.open .arr{transform:rotate(180deg)}.acc-btn .apct{background:rgba(255,255,255,.2);padding:.1rem .5rem;border-radius:12px;font-size:.78rem;margin-left:auto;margin-right:.7rem}
+.acc-body{display:none;background:var(--card);border:1px solid var(--brd);border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);padding:.7rem;margin-bottom:.7rem;overflow-x:auto}.acc-body.open{display:block}
+.dtbl{width:100%;border-collapse:separate;border-spacing:0;font-size:.84rem}
+.dtbl thead th{background:var(--bl-ghost);color:var(--bl-deep);font-weight:600;font-size:.73rem;text-transform:uppercase;letter-spacing:.04em;padding:.55rem .6rem;text-align:left;border-bottom:2px solid var(--brd);position:sticky;top:0;z-index:2}
+.dtbl tbody td{padding:.5rem .6rem;border-bottom:1px solid var(--brd-lt);vertical-align:middle}
+.dtbl tbody tr:hover{background:var(--bl-ghost)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.tcard{background:var(--card);border:1px solid var(--brd);border-radius:var(--r-lg);padding:1.2rem;box-shadow:var(--sh-sm);transition:box-shadow var(--ease)}.tcard:hover{box-shadow:var(--sh-md)}
+.tcard .tc-n{font-family:var(--f-display);font-size:1.05rem;font-weight:700;color:var(--bl-deep)}
+.tcard .tc-pct{font-size:1.7rem;font-weight:700;color:var(--or);margin:.3rem 0}
+.tc-bar-w{width:100%;background:#ecf0f4;border-radius:8px;height:9px;overflow:hidden;margin:.4rem 0}
+.tc-bar{height:9px;border-radius:8px;background:linear-gradient(90deg,var(--bl-br),var(--bl));transition:width .3s}
+.tc-ar{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem;font-size:.8rem}
+.tc-ar .an{flex:1;color:var(--ink-lt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-ar .ab-w{width:70px;background:#f0f4f8;border-radius:5px;height:6px;overflow:hidden;flex-shrink:0}
+.tc-ar .ab{height:6px;border-radius:5px;background:var(--or-warm)}.tc-ar .ap{font-weight:600;width:34px;text-align:right;flex-shrink:0}
+.hm-w{overflow-x:auto;margin:.8rem 0}
+.hm{width:100%;border-collapse:collapse;font-size:.8rem}.hm th,.hm td{border:1px solid var(--brd);padding:.4rem .5rem;text-align:center}.hm th{background:var(--bl-ghost);color:var(--bl-deep);font-weight:600;font-size:.75rem}
+.radar-wrap{display:flex;justify-content:center;margin:1rem 0}.radar-wrap svg{max-width:420px;width:100%}
+.stabs{display:flex;gap:0;border-bottom:1px solid var(--brd);margin-bottom:1rem;overflow-x:auto}
+.stab{padding:.55rem 1.2rem;font-family:var(--f-body);font-size:.85rem;font-weight:500;color:var(--ink-mt);border:none;background:none;cursor:pointer;position:relative;white-space:nowrap}
+.stab.active{color:var(--bl);font-weight:700}.stab.active::after{content:'';position:absolute;bottom:-1px;left:.2rem;right:.2rem;height:2px;background:var(--bl)}
+.spnl{display:none}.spnl.active{display:block;animation:fadeUp .25s ease}
+.goal-card{border:1px solid var(--brd);border-radius:var(--r-md);padding:.9rem;margin-bottom:.5rem;background:var(--bl-ghost);cursor:grab}.goal-card:active{cursor:grabbing}.goal-card.drag-over{border-top:3px solid var(--bl)}
+.cert-row{display:flex;align-items:center;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--brd-lt);font-size:.86rem;flex-wrap:wrap}
+.cert-file-badge{font-size:.72rem;padding:.15rem .4rem;background:var(--grn-wash);color:var(--grn);border-radius:4px;font-weight:600;cursor:pointer}
+.refl-card{background:var(--ylw-wash);border:1px solid #f0dfa0;border-radius:var(--r-md);padding:1rem;margin-bottom:.7rem}
+.refl-card .refl-q{font-family:var(--f-display);font-weight:600;color:#8a6d00;font-size:.92rem;margin-bottom:.4rem}
+.refl-card textarea{width:100%;min-height:50px;font-family:var(--f-body);font-size:.88rem;border:1px solid #e8d7a0;border-radius:6px;padding:.5rem;background:#fffef8;resize:vertical}
+.ref-b{background:var(--bl-ghost);border:1px solid var(--brd);border-radius:var(--r-md);padding:1rem;margin-top:.8rem}
+.ref-b textarea{width:100%;min-height:110px;font-family:var(--f-body);font-size:.9rem;padding:.7rem;border:1.5px solid var(--brd);border-radius:var(--r-sm);background:var(--card);resize:vertical;line-height:1.6}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;backdrop-filter:blur(3px)}
+.modal-ov.active{display:flex;align-items:center;justify-content:center}
+.modal-bx{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--sh-lg);width:90%;max-width:540px;max-height:85vh;overflow-y:auto;padding:1.6rem}
+.modal-bx h3{font-family:var(--f-display);font-size:1.1rem;color:var(--bl-deep);margin-bottom:.8rem}
+/* Pipeline visual */
+.pipe-card{border:1px solid var(--brd);border-radius:var(--r-md);padding:.8rem;margin-bottom:.5rem;background:var(--card)}
+.pipe-stage{display:inline-flex;align-items:center;gap:.2rem;font-size:.72rem;font-weight:600;padding:.15rem .5rem;border-radius:12px}
+.pipe-idea{background:#f0f4f8;color:#4a6fa5}.pipe-draft{background:var(--ylw-wash);color:#8a6d00}.pipe-review{background:var(--or-wash);color:var(--or)}.pipe-submitted{background:var(--purple-wash);color:var(--purple)}.pipe-revision{background:var(--teal-wash);color:var(--teal)}.pipe-accepted{background:var(--grn-wash);color:var(--grn)}.pipe-published{background:#e8f5e9;color:#1b5e20}
+/* Meeting log */
+.mtg-card{border:1px solid var(--brd);border-radius:var(--r-md);padding:.9rem;margin-bottom:.6rem;background:var(--bl-ghost)}
+.mtg-card .mtg-date{font-size:.78rem;color:var(--ink-mt);font-weight:600}
+.mtg-card .mtg-actions{margin-top:.5rem}
+.mtg-action{display:flex;align-items:center;gap:.4rem;font-size:.84rem;padding:.2rem 0}
+.mtg-action input[type="checkbox"]{accent-color:var(--teal)}
+.mtg-action.done span{text-decoration:line-through;opacity:.5}
+/* Milestone timeline */
+.ms-tl{position:relative;padding-left:1.8rem;margin:.8rem 0}
+.ms-tl::before{content:'';position:absolute;left:.6rem;top:0;bottom:0;width:2px;background:var(--brd)}
+.ms-item{position:relative;padding:.4rem 0 .8rem .8rem}
+.ms-item::before{content:'';position:absolute;left:-1.45rem;top:.5rem;width:10px;height:10px;border-radius:50%;border:2px solid var(--card)}
+.ms-item.ms-done::before{background:var(--grn);box-shadow:0 0 0 2px var(--grn)}
+.ms-item.ms-next::before{background:var(--or);box-shadow:0 0 0 2px var(--or)}
+.ms-item.ms-future::before{background:var(--brd);box-shadow:0 0 0 2px var(--brd)}
+.ms-item .ms-d{font-size:.76rem;color:var(--ink-mt);font-weight:600}.ms-item .ms-t{font-weight:600;font-size:.9rem}.ms-item .ms-desc{font-size:.82rem;color:var(--ink-lt)}
+/* Networking */
+.net-card{border:1px solid var(--brd);border-radius:var(--r-md);padding:.8rem;margin-bottom:.4rem;display:flex;gap:.7rem;align-items:flex-start}
+.net-avatar{width:36px;height:36px;border-radius:50%;background:var(--bl-wash);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:var(--bl);flex-shrink:0}
+.net-info{flex:1;min-width:0}.net-info .net-name{font-weight:600;font-size:.9rem}.net-info .net-meta{font-size:.78rem;color:var(--ink-mt)}
+.net-followup{font-size:.76rem;padding:.12rem .4rem;border-radius:10px;font-weight:600}
+.net-fu-pending{background:var(--or-wash);color:var(--or)}.net-fu-done{background:var(--grn-wash);color:var(--grn)}.net-fu-none{background:#f0f4f8;color:var(--ink-mt)}
+.credits{text-align:center;padding:1.8rem 1rem;font-size:.76rem;color:var(--ink-mt);border-top:1px solid var(--brd-lt);margin-top:1.5rem}.credits strong{color:var(--ink-lt)}
+body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{background:#161b22!important}body.hc .portal-nav,body.hc .sec,body.hc .tcard,body.hc .stc,body.hc .modal-bx,body.hc .acc-body,body.hc .ref-b,body.hc .fg input,body.hc .fg select,body.hc .fg textarea,body.hc .dtbl thead th,body.hc .hm th,body.hc .goal-card,body.hc .refl-card,body.hc .pipe-card,body.hc .mtg-card,body.hc .net-card{background:#161b22!important;color:#e6edf3!important;border-color:#30363d!important}body.hc .ptab,body.hc .stab,body.hc .sec-h h2,body.hc .stc .sl,body.hc .tc-n{color:#58a6ff!important}body.hc .btn-p{background:#238636!important}
+@media print{.topbar,.portal-nav,.brow,.no-print,.stabs{display:none!important}.pnl,.spnl{display:block!important;padding:0;max-width:100%}.sec{break-inside:avoid;box-shadow:none;border:1px solid #ddd}body{background:#fff;font-size:10pt}}
+@media(max-width:768px){.topbar{padding:.5rem .8rem}.topbar h1{font-size:.95rem}.pnl{padding:.8rem}.fgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.tgrid{grid-template-columns:1fr}.ptab{padding:.6rem .9rem;font-size:.82rem}.stab{padding:.45rem .7rem;font-size:.78rem}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6m0 8v6M8 4c0 2 2 4 4 4s4-2 4-4M8 20c0-2 2-4 4-4s4 2 4 4M6 12h4m4 0h4"/><circle cx="12" cy="12" r="2"/></svg></div>
+    <h1>Serrano Lab <span>| Mentoring Platform</span></h1>
+  </div>
+  <div class="topbar-r"><label><input type="checkbox" id="hc-toggle"> High Contrast</label><span style="opacity:.5">v2.2</span></div>
+</header>
+<nav class="portal-nav">
+  <button class="ptab active" data-portal="mentee"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>Mentee</button>
+  <button class="ptab" data-portal="mentor"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Mentor / PI</button>
+  <button class="ptab" data-portal="about"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>About</button>
+</nav>
+
+<!-- ════════ MENTEE PORTAL ════════ -->
+<div class="pnl active" id="pnl-mentee">
+  <div class="stabs" id="m-tabs">
+    <button class="stab active" data-msub="m-plan">Plan & Goals</button>
+    <button class="stab" data-msub="m-track">Track Progress</button>
+    <button class="stab" data-msub="m-record">Professional Record</button>
+    <button class="stab" data-msub="m-meetings">Meeting Log</button>
+    <button class="stab" data-msub="m-network">Networking</button>
+    <button class="stab" data-msub="m-export">Export</button>
+  </div>
+
+  <!-- ── PLAN & GOALS ── -->
+  <div class="spnl active" id="m-plan">
+    <div class="sec">
+      <div class="sec-h"><div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div><h2>Your Profile & IDP Setup</h2><div class="sub">Individual Development Plan — configure once, update as you grow</div></div></div>
+      <div class="fgrid">
+        <div class="fg"><label>Full Name</label><input type="text" id="m-name" placeholder="e.g. Carly Golden"></div>
+        <div class="fg"><label>Training Level</label><select id="m-level"><option value="ug">Undergraduate</option><option value="phd" selected>PhD Student</option><option value="md/phd">MD/PhD Student</option><option value="postdoc">Post-doc</option><option value="staff">Staff / Technician</option></select></div>
+        <div class="fg"><label>Start Date</label><input type="date" id="m-start"></div>
+        <div class="fg"><label>Expected End Date</label><input type="date" id="m-end"></div>
+      </div>
+      <div class="fgrid" style="margin-top:.6rem"><div class="fg" style="grid-column:1/-1"><label>Career Goal Statement</label><textarea id="m-career" placeholder="e.g. I aim to become an independent investigator studying chromatin biology in rare diseases..."></textarea></div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><div class="ico or"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div><h2>SMART Goals & Milestones</h2><div class="sub">Drag to reorder priorities — for DAC review & F-series applications</div></div></div>
+      <div id="goals-ctr"></div>
+      <div class="brow"><button class="btn btn-p" onclick="addGoal()">+ Add Goal</button></div>
+    </div>
+    <!-- DAC & Milestones (PhD/MD-PhD) -->
+    <div class="sec" id="sec-dac">
+      <div class="sec-h"><div class="ico pp"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>
+        <div><h2>DAC & Milestone Schedule</h2><div class="sub">Track committee meetings, qualifying exams, and key program deadlines</div></div></div>
+      <div id="dac-tl" class="ms-tl"></div>
+      <div class="brow"><button class="btn btn-pp btn-sm" onclick="addMilestone()">+ Add Milestone</button></div>
+      <div id="dac-form" style="display:none;margin-top:.8rem">
+        <div class="fgrid">
+          <div class="fg"><label>Milestone</label><select id="dac-type"><option>DAC Meeting</option><option>Qualifying Exam</option><option>Prospectus Defense</option><option>Dissertation Defense</option><option>Grant Deadline (F31/F32)</option><option>Annual Progress Review</option><option>Other</option></select></div>
+          <div class="fg"><label>Date</label><input type="date" id="dac-date"></div>
+          <div class="fg"><label>Status</label><select id="dac-status"><option>Upcoming</option><option>Scheduled</option><option>Completed</option></select></div>
+        </div>
+        <div class="fg" style="margin-top:.4rem"><label>Notes / Preparation</label><textarea id="dac-notes" rows="2" placeholder="Committee members, prep tasks, documents needed..."></textarea></div>
+        <div class="brow"><button class="btn btn-pp btn-sm" onclick="saveMilestone()">Save</button><button class="btn btn-gh btn-sm" onclick="$('dac-form').style.display='none'">Cancel</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TRACK PROGRESS ── -->
+  <div class="spnl" id="m-track">
+    <div class="sec">
+      <div class="sec-h"><div class="ico tl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+        <div><h2>Progress Dashboard</h2><div class="sub">Your training at a glance</div></div></div>
+      <div class="stats">
+        <div class="stc"><div class="sv" id="ms-pct">0%</div><div class="sl">Overall</div></div>
+        <div class="stc"><div class="sv" id="ms-done">0</div><div class="sl">Completed</div></div>
+        <div class="stc"><div class="sv" id="ms-ip">0</div><div class="sl">In Progress</div></div>
+        <div class="stc"><div class="sv" id="ms-goals">0</div><div class="sl">Goals</div></div>
+        <div class="stc"><div class="sv" id="ms-pubs">0</div><div class="sl">Manuscripts</div></div>
+        <div class="stc"><div class="sv" id="ms-certs">0</div><div class="sl">Certificates</div></div>
+      </div>
+      <div id="m-radar" class="radar-wrap"></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg></div>
+        <div><h2>Training Competency Matrix</h2><div class="sub">One section at a time</div></div></div>
+      <div style="margin-bottom:.6rem"><label style="font-size:.83rem;color:var(--ink-lt)"><input type="checkbox" id="m-filter-inc"> Show only incomplete</label></div>
+      <div id="m-matrix"></div>
+    </div>
+  </div>
+
+  <!-- ── PROFESSIONAL RECORD ── -->
+  <div class="spnl" id="m-record">
+    <div class="sec">
+      <div class="sec-h"><div class="ico gn"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+        <div><h2>Certificates & Credentials</h2><div class="sub">Upload PDFs, track certifications and courses</div></div></div>
+      <div id="cert-list"></div>
+      <div class="brow"><button class="btn btn-t btn-sm" onclick="addCert()">+ Add Certificate</button></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><div class="ico pp"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <div><h2>Publication & Manuscript Pipeline</h2><div class="sub">Track manuscripts from idea to publication — essential for biosketch and CV</div></div></div>
+      <div id="pub-list"></div>
+      <div class="brow"><button class="btn btn-pp btn-sm" onclick="addPub()">+ Add Manuscript</button></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><div class="ico or"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+        <div><h2>Conference & Presentation Log</h2><div class="sub">Talks, posters, invited seminars — feeds directly into CV and biosketch</div></div></div>
+      <div id="conf-list"></div>
+      <div class="brow"><button class="btn btn-o btn-sm" onclick="addConf()">+ Add Presentation</button></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h"><div class="ico yl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div><h2>Teaching & Outreach</h2><div class="sub">Track mentoring, TA work, and outreach hours for fellowship applications</div></div></div>
+      <div id="teach-list"></div>
+      <div class="brow"><button class="btn btn-ol btn-sm" onclick="addTeach()">+ Add Entry</button></div>
+    </div>
+  </div>
+
+  <!-- ── MEETING LOG ── -->
+  <div class="spnl" id="m-meetings">
+    <div class="sec">
+      <div class="sec-h"><div class="ico tl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div><h2>1:1 Meeting Log</h2><div class="sub">Track mentor meetings with discussion points and rolling action items — uncompleted items carry forward</div></div></div>
+      <div class="brow" style="margin-bottom:.8rem"><button class="btn btn-t" onclick="addMeeting()">+ New Meeting Entry</button></div>
+      <div id="mtg-list"></div>
+    </div>
+  </div>
+
+  <!-- ── NETWORKING ── -->
+  <div class="spnl" id="m-network">
+    <div class="sec">
+      <div class="sec-h"><div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg></div>
+        <div><h2>Networking Tracker</h2><div class="sub">Build and maintain your professional network — track contacts, events, and follow-ups</div></div></div>
+      <div class="stats" style="margin-bottom:.6rem">
+        <div class="stc"><div class="sv" id="net-total">0</div><div class="sl">Contacts</div></div>
+        <div class="stc"><div class="sv" id="net-pending">0</div><div class="sl">Pending Follow-ups</div></div>
+        <div class="stc"><div class="sv" id="net-events">0</div><div class="sl">Events Attended</div></div>
+      </div>
+      <div id="net-list"></div>
+      <div class="brow"><button class="btn btn-p btn-sm" onclick="addContact()">+ Add Contact</button></div>
+    </div>
+  </div>
+
+  <!-- ── EXPORT ── -->
+  <div class="spnl" id="m-export">
+    <div class="sec">
+      <div class="sec-h"><div class="ico or"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
+        <div><h2>Export & Share</h2><div class="sub">Download your IDP, training data, CV components, or send to mentor</div></div></div>
+      <div class="brow">
+        <button class="btn btn-p" onclick="exportMCSV()">Training Matrix CSV</button>
+        <button class="btn btn-ol" onclick="window.print()">Print / PDF</button>
+        <button class="btn btn-o" onclick="sendProgress()">Send to Mentor</button>
+        <button class="btn btn-ol" onclick="exportIDP()">Full IDP Summary</button>
+        <button class="btn btn-pp" onclick="exportCV()">CV Components Export</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ MENTOR PORTAL ════════ -->
+<div class="pnl" id="pnl-mentor">
+  <div class="stabs"><button class="stab active" data-sub="pi-health">Lab Health</button><button class="stab" data-sub="pi-individual">Individual Growth</button><button class="stab" data-sub="pi-reflect">Mentoring Reflection</button><button class="stab" data-sub="pi-ref">Reference Builder</button><button class="stab" data-sub="pi-export">Export</button></div>
+  <div class="spnl active" id="pi-health">
+    <div class="sec"><div class="sec-h"><div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><h2>Import Trainee Data</h2><div class="sub">Drop CSV exports — files accumulate across uploads</div></div></div>
+      <div id="pi-drop" style="border:2px dashed var(--bl);border-radius:var(--r-md);padding:1.2rem;text-align:center;background:var(--bl-ghost);cursor:pointer">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--bl)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        <div style="font-weight:600;color:var(--bl);margin-top:.2rem">Drop trainee CSVs here, or click to select</div>
+        <input type="file" id="pi-fin" accept=".csv" multiple style="display:none"></div>
+      <div id="pi-loaded" style="margin-top:.4rem;font-size:.82rem;color:var(--ink-mt)"></div></div>
+    <div class="sec"><div class="sec-h"><div class="ico tl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><div><h2>Lab Training Health</h2><div class="sub">Where does the lab need investment? Not for trainee comparison</div></div></div>
+      <div class="stats"><div class="stc"><div class="sv" id="ps-avg">—</div><div class="sl">Lab Average</div></div><div class="stc"><div class="sv" id="ps-n">0</div><div class="sl">Trainees</div></div><div class="stc"><div class="sv" id="ps-gaps">—</div><div class="sl">Coverage Gaps</div></div><div class="stc"><div class="sv" id="ps-blocked">0</div><div class="sl">Blocked</div></div></div>
+      <div style="display:flex;flex-wrap:wrap;gap:.7rem;align-items:end;margin-bottom:.8rem">
+        <div class="fg" style="min-width:130px"><label>Filter Level</label><select id="pf-lev"><option value="all">All Levels</option><option value="ug">UG</option><option value="phd">PhD</option><option value="md/phd">MD/PhD</option><option value="postdoc">Postdoc</option><option value="staff">Staff</option></select></div>
+        <div class="fg" style="min-width:150px"><label>Filter Area</label><select id="pf-area"><option value="all">All Areas</option></select></div></div>
+      <div id="pi-radar" class="radar-wrap"></div><div id="pi-cards" class="tgrid"></div></div>
+    <div class="sec"><div class="sec-h"><div class="ico yl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg></div><div><h2>Training Coverage Matrix</h2><div class="sub">Lab-wide gaps for targeted training — useful for grant plans</div></div></div><div id="pi-hm" class="hm-w"></div></div>
+  </div>
+  <div class="spnl" id="pi-individual">
+    <div class="sec"><div class="sec-h"><div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div><h2>Individual Trainee Growth</h2><div class="sub">One trainee's development trajectory</div></div></div>
+      <div class="fg" style="max-width:260px;margin-bottom:.8rem"><label>Trainee</label><select id="pi-det-sel"><option value="">— Load CSVs —</option></select></div><div id="pi-det-content"><p style="color:var(--ink-mt);text-align:center;padding:1.5rem">Import data and select a trainee.</p></div></div>
+    <div class="sec"><div class="sec-h"><div class="ico or"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><div><h2>Mentor-Defined Goals</h2><div class="sub">Set goals for each trainee</div></div></div>
+      <div class="fgrid"><div class="fg"><label>Trainee</label><select id="mg-who"><option value="">—</option></select></div><div class="fg"><label>Area</label><select id="mg-area"><option>Professional Growth</option><option>Technical Skills</option><option>Communication</option><option>Computational</option><option>Leadership</option><option>Other</option></select></div></div>
+      <div class="fg" style="margin-top:.4rem"><label>Goal</label><textarea id="mg-desc" rows="2" placeholder="Goal description..."></textarea></div>
+      <div class="fgrid" style="margin-top:.4rem"><div class="fg"><label>Target</label><input type="date" id="mg-date"></div><div class="fg"><label>Status</label><select id="mg-st"><option>Not Started</option><option>In Progress</option><option>Needs Reinforcement</option><option>Completed</option></select></div></div>
+      <div class="brow"><button class="btn btn-o btn-sm" onclick="addMGoal()">+ Add</button></div><div id="mg-list" style="margin-top:.7rem"></div></div>
+  </div>
+  <div class="spnl" id="pi-reflect">
+    <div class="sec"><div class="sec-h"><div class="ico yl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg></div><div><h2>Mentoring Reflection & Action</h2><div class="sub">What does your lab need from you?</div></div></div>
+      <div id="pi-insights" style="margin-bottom:.8rem"></div>
+      <div class="refl-card"><div class="refl-q">What resources or training should I prioritize this quarter?</div><textarea id="refl-q1" onchange="savePIState()" placeholder="Group workshops, guest speakers, core facility demos..."></textarea></div>
+      <div class="refl-card"><div class="refl-q">Are there shared barriers (time, access, confidence) among my trainees?</div><textarea id="refl-q2" onchange="savePIState()" placeholder="Several feel uncertain about computational approaches..."></textarea></div>
+      <div class="refl-card"><div class="refl-q">What aspects of lab culture do I want to strengthen?</div><textarea id="refl-q3" onchange="savePIState()" placeholder="Structured peer feedback, dedicated development time..."></textarea></div>
+      <div class="refl-card"><div class="refl-q">What am I doing well as a mentor? What can I improve?</div><textarea id="refl-q4" onchange="savePIState()" placeholder="Honest self-assessment..."></textarea></div>
+      <h3 style="font-family:var(--f-display);margin:1rem 0 .4rem;color:var(--bl-deep);font-size:.98rem">Mentor Action Items</h3>
+      <div id="pi-actions"></div><div class="brow"><button class="btn btn-p btn-sm" onclick="addMAction()">+ Action Item</button></div></div>
+  </div>
+  <div class="spnl" id="pi-ref">
+    <div class="sec"><div class="sec-h"><div class="ico or"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div><h2>Reference Paragraph Builder</h2><div class="sub">Letters, training plans, annual reviews, progress reports</div></div></div>
+      <div class="fgrid"><div class="fg"><label>Trainee</label><select id="ref-who"><option value="">—</option></select></div><div class="fg"><label>Type</label><select id="ref-type"><option value="recommendation">Recommendation</option><option value="training-plan">Training Plan</option><option value="annual-review">Annual Review</option><option value="progress-report">Progress Report</option></select></div></div>
+      <div class="brow"><button class="btn btn-o" onclick="genRef()">Generate Draft</button></div>
+      <div class="ref-b" id="ref-out" style="display:none"><textarea id="ref-txt"></textarea><div class="brow"><button class="btn btn-p btn-sm" onclick="navigator.clipboard.writeText($('ref-txt').value).then(()=>alert('Copied!'))">Copy</button><button class="btn btn-ol btn-sm" onclick="dlText($('ref-txt').value,'reference_'+today()+'.txt')">Download</button></div></div></div>
+  </div>
+  <div class="spnl" id="pi-export">
+    <div class="sec"><div class="sec-h"><div class="ico gn"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div><div><h2>Export & Download</h2></div></div>
+      <div class="brow"><button class="btn btn-p" onclick="piExCSV()">Group CSV</button><button class="btn btn-ol" onclick="window.print()">Print / PDF</button><button class="btn btn-t" onclick="piExNotes()">Export Notes (JSON)</button><button class="btn btn-ol" onclick="piImNotes()">Import Notes</button></div>
+      <div style="margin-top:1rem"><button class="btn btn-gh" onclick="piClear()" style="color:var(--red)">Clear All Data</button></div></div>
+  </div>
+</div>
+
+<!-- ════════ ABOUT ════════ -->
+<div class="pnl" id="pnl-about">
+  <div class="sec"><div class="sec-h"><div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><h2>About This Platform</h2></div>
+    <p style="line-height:1.8;max-width:680px">The <strong>Serrano Lab Mentoring & Training Platform</strong> supports structured, accountable mentoring in academic research. Mentee and Mentor portals provide complementary tools for IDP tracking, professional development, milestone scheduling, and generating documentation for fellowships, grants, and reviews.</p>
+    <h3 style="font-family:var(--f-display);margin:1.2rem 0 .4rem;color:var(--bl-deep)">Contributions & Credits</h3>
+    <table class="dtbl" style="max-width:680px"><thead><tr><th>Contributor</th><th>Role</th><th>Contributions</th></tr></thead><tbody>
+      <tr><td><strong>Dr. Maria A. Serrano</strong></td><td>Creator & Content</td><td>Conceptual design, training framework (7 domains, 50+ skills), competency taxonomy, mentoring pedagogy, IDP/NIH/DAC alignment, reflection prompts, all domain content, pedagogical direction</td></tr>
+      <tr><td><strong>Claude (Anthropic)</strong></td><td>Development Partner</td><td>UI/UX design, front-end code, data architecture, CSV pipeline, radar charts, reference builder, localStorage persistence, networking tracker, publication pipeline, meeting log, milestone scheduler, v2.2 professional record system</td></tr>
+    </tbody></table>
+    <h3 style="font-family:var(--f-display);margin:1.2rem 0 .4rem;color:var(--bl-deep)">Version History</h3>
+    <p style="line-height:1.8;max-width:680px;font-size:.9rem"><strong>v1.0</strong> — Separate Mentee Matrix & PI Dashboard.<br><strong>v2.0</strong> — Unified platform, IDP builder, SMART goals, reference builder.<br><strong>v2.1</strong> — Pedagogical redesign, mentoring reflection, radar charts, drag-drop goals, cert uploads.<br><strong>v2.2</strong> — Sub-tab navigation, DAC milestone scheduler, publication pipeline, conference log, 1:1 meeting log with rolling action items, networking tracker, teaching hours, CV components export.</p>
+  </div>
+</div>
+
+<div class="modal-ov" id="modal-ov"><div class="modal-bx" id="modal-bx"></div></div>
+<form id="matrixForm" action="https://formspree.io/f/xkgbpjoz" method="POST" style="display:none"><input type="email" name="email" id="fEmail"><textarea name="matrixCSV" id="fCSV"></textarea></form>
+<footer class="credits"><strong>Serrano Lab Mentoring & Training Platform v2.2</strong><br>Concept & Content: Dr. Maria A. Serrano · Implementation: Claude (Anthropic)<br>Boston University · Chobanian & Avedisian School of Medicine · Center for Regenerative Medicine</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   DATA & CONFIG
+   ═══════════════════════════════════════════════════════════ */
+const MA=[{group:"Core Lab Practices",topics:[{topic:"Lab Safety & Biosafety",skills:[{name:"EHS & BSL-2 Certification",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Incident Reporting & PPE",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"Responsible Conduct & Integrity",skills:[{name:"Authorship & Ethics",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Conflict-of-Interest Disclosure",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"Data Stewardship & FAIR",skills:[{name:"Backups & File Naming",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Metadata & Repository Submission",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Git/GitHub & Zenodo",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"Open Science Practices",skills:[{name:"Protocols.io, Notebooks, Docker",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"EDIA & Accessibility",skills:[{name:"Bystander Intervention & DEIA",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"Team Communication",skills:[{name:"Stand-ups & Task Boards",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Constructive Feedback",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"Meetings & Journal Clubs",skills:[{name:"Data Presentation",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Article Appraisal",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"Patient Engagement",skills:[{name:"Plain-Language Summaries",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Respectful Language",level:["ug","phd","md/phd","postdoc","staff"]}]}]},{group:"Personal & Professional Development",topics:[{topic:"Personal Development",skills:[{name:"IDP Planning",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Time Management",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Resilience & Coping",level:["phd","md/phd","postdoc","staff"]},{name:"Inclusive Lab Culture",level:["ug","phd","md/phd","postdoc","staff"]}]},{topic:"Professional Growth",skills:[{name:"Abstract & Poster Writing",level:["ug","staff"]},{name:"Grant & Manuscript Writing",level:["phd","md/phd","postdoc"]},{name:"Science Communication",level:["ug","phd","md/phd","postdoc","staff"]},{name:"RCR Training",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Career Planning",level:["phd","md/phd","postdoc","staff"]},{name:"Budget Prep & Resource Mgt",level:["phd","md/phd","postdoc","staff"]},{name:"Interview & Negotiation Training",level:["postdoc"]},{name:"Networking Workshops",level:["phd","md/phd","postdoc"]}]},{topic:"Leadership & Mentoring",skills:[{name:"Peer Collaboration",level:["ug"]},{name:"Undergrad Mentoring",level:["phd","md/phd","postdoc","staff"]},{name:"Network Building & Maintenance",level:["phd","md/phd","postdoc"]},{name:"Lab Management",level:["postdoc","staff"]}]}]},{group:"Technical & Research Skills",topics:[{topic:"Cell & Molecular Biology",skills:[{name:"Sterile Technique & Culture",level:["ug","staff"]},{name:"iPSC Maintenance",level:["ug","phd","md/phd","postdoc","staff"]},{name:"2D/3D Differentiation",level:["phd","md/phd","postdoc","staff"]},{name:"Advanced Methods (Flow, qPCR)",level:["phd","md/phd","postdoc","staff"]}]},{topic:"Zebrafish Techniques",skills:[{name:"Breeding & Genotyping",level:["ug","phd","staff"]},{name:"Microinjection & Imaging",level:["phd","md/phd","postdoc","staff"]}]},{topic:"Data & Visualization",skills:[{name:"FAIR Data Principles",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Stats & Experimental Design",level:["phd","md/phd","postdoc","staff"]},{name:"Image Analysis & Tracking",level:["phd","md/phd","postdoc","staff"]}]},{topic:"Computational Biology",skills:[{name:"R/Python Basics",level:["ug","phd","md/phd","staff"]},{name:"Single-Cell RNAseq",level:["phd","md/phd","postdoc","staff"]},{name:"Machine Learning Models",level:["postdoc"]},{name:"CRISPR Screening (elective)",level:["phd","md/phd","postdoc"]},{name:"Spatial Transcriptomics (elective)",level:["phd","md/phd","postdoc"]},{name:"Organoid Technologies (elective)",level:["phd","md/phd","postdoc"]}]}]},{group:"Scientific Communication",topics:[{topic:"Science Communication",skills:[{name:"Presentation & Posters",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Non-Scientific Audiences",level:["phd","md/phd","postdoc","staff"]},{name:"Advocacy Group Engagement",level:["phd","md/phd","postdoc","staff"]}]},{topic:"Ethics & Advocacy",skills:[{name:"Patient Recruitment/Consent",level:["phd","md/phd","postdoc","staff"]},{name:"Biobanking & Samples",level:["phd","md/phd","postdoc","staff"]}]},{topic:"Open Science Tools",skills:[{name:"GitHub Actions & Quarto CI",level:["phd","md/phd","postdoc","staff"]},{name:"Protocol Sharing & Provenance",level:["phd","md/phd","postdoc","staff"]}]}]},{group:"Academic & Clinical Training",topics:[{topic:"Formal Education",skills:[{name:"Graduate Coursework",level:["phd","md/phd"]},{name:"Clinical Epidemiology & Biostatistics",level:["md/phd","postdoc"]},{name:"GCP Certification",level:["md/phd","postdoc"]},{name:"Clinical Trials & Regulatory",level:["md/phd","postdoc"]},{name:"Teaching & Pedagogy",level:["phd"]}]},{topic:"Clinical Exposure",skills:[{name:"Rare Disease Clinic Shadowing",level:["md/phd","phd"]},{name:"Clinical Grand Rounds",level:["md/phd","postdoc"]},{name:"Patient-Centered Research",level:["md/phd","postdoc"]},{name:"FDA Interactions & IND",level:["postdoc"]}]},{topic:"Seminars & Clubs",skills:[{name:"Lab Meetings & Colloquia",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Journal Club Leadership",level:["phd","md/phd","postdoc"]},{name:"CReM Seminar Series",level:["phd","md/phd","postdoc","staff"]}]}]},{group:"Progress Monitoring",topics:[{topic:"Evaluations",skills:[{name:"Weekly 1:1 Meetings",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Bi-Annual Committee Meetings",level:["phd","md/phd","postdoc"]},{name:"Annual Staff Reviews",level:["staff"]}]},{topic:"Feedback",skills:[{name:"Peer & Mentor Feedback",level:["ug","phd","md/phd","postdoc","staff"]},{name:"Self-Assessment Practices",level:["phd","md/phd","postdoc","staff"]}]}]},{group:"Lab Operations & Staff",topics:[{topic:"Instrumentation",skills:[{name:"Flow Cytometer QC",level:["staff"]},{name:"Confocal Maintenance",level:["staff"]},{name:"Zebrafish Facility",level:["staff"]}]},{topic:"Regulatory",skills:[{name:"CLIA/OSHA Docs",level:["staff"]},{name:"IACUC/IBC Protocols",level:["staff"]},{name:"Hazardous Shipping",level:["staff"]}]},{topic:"Sample Logistics",skills:[{name:"LIMS & Inventory",level:["staff"]},{name:"Chain-of-Custody",level:["staff"]}]},{topic:"SOPs",skills:[{name:"Troubleshooting Assays",level:["staff"]},{name:"SOP Drafting",level:["staff"]}]},{topic:"Purchasing",skills:[{name:"Quote Comparison",level:["staff"]},{name:"Vendor Negotiation",level:["staff"]}]},{topic:"Coordination",skills:[{name:"Gantt Charts",level:["staff"]},{name:"Equipment Scheduling",level:["staff"]}]}]}];
+const STS=["Not Started","In Progress","Blocked","Needs Refresh","Complete"];
+const SCLS={"Not Started":"bdg-ns","In Progress":"bdg-ip","Blocked":"bdg-bk","Needs Refresh":"bdg-nr","Complete":"bdg-ok","Needs Reinforcement":"bdg-nr","Completed":"bdg-ok","Upcoming":"bdg-ns","Scheduled":"bdg-ip"};
+const REFL={"Not Started":"What's preventing you?","In Progress":"Next steps?","Blocked":"What obstacles?","Needs Refresh":"What needs updating?","Complete":"What did you learn?"};
+const PUB_STAGES=["Idea","Drafting","Co-author Review","Submitted","In Revision","Accepted","Published"];
+const PUB_CLS={"Idea":"pipe-idea","Drafting":"pipe-draft","Co-author Review":"pipe-review","Submitted":"pipe-submitted","In Revision":"pipe-revision","Accepted":"pipe-accepted","Published":"pipe-published"};
+
+/* ═══ STATE ═══ */
+let mLevel="phd",mGoals=[],mCerts=[],mPubs=[],mConfs=[],mTeach=[],mMtgs=[],mMilestones=[],mContacts=[];
+let piT=[],piCSV=[],piMG={},piN={},piActions=[];
+
+/* ═══ UTIL ═══ */
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;')}
+function csvE(v){return '"'+String(v||'').replace(/"/g,'""')+'"'}
+function today(){return new Date().toISOString().slice(0,10)}
+function dlText(t,fn){const b=new Blob([t],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=fn;a.click()}
+function getYrs(lv){const y=new Date().getFullYear();const n=lv==='ug'?4:lv==='md/phd'?6:lv==='phd'?5:lv==='postdoc'?5:4;return Array.from({length:n},(_,i)=>y+i)}
+const M_KEY='serrano_mentee_v22',PI_KEY='serrano_pi_v22';
+
+/* ═══ NAV ═══ */
+document.querySelectorAll('.ptab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.ptab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.pnl').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('pnl-'+t.dataset.portal).classList.add('active')}));
+document.querySelectorAll('.stab').forEach(t=>t.addEventListener('click',()=>{const parent=t.closest('.pnl');const tabGroup=t.closest('.stabs');tabGroup.querySelectorAll('.stab').forEach(x=>x.classList.remove('active'));parent.querySelectorAll('.spnl').forEach(x=>x.classList.remove('active'));t.classList.add('active');const sub=t.dataset.sub||t.dataset.msub;$(sub).classList.add('active')}));
+$('hc-toggle').addEventListener('change',function(){document.body.classList.toggle('hc',this.checked)});
+
+/* ═══ SAVE/LOAD ═══ */
+let saveT;function ds(){clearTimeout(saveT);saveT=setTimeout(saveM,400)}
+function saveM(){
+  const mx=[];document.querySelectorAll('#m-matrix tbody tr').forEach(tr=>{mx.push({st:tr.querySelector('.mst')?.value||'Not Started',ev:tr.querySelector('.mev')?.value||'',rf:tr.querySelector('.mrf')?.value||'',yrs:[...tr.querySelectorAll('.myr')].map(c=>c.checked)})});
+  try{localStorage.setItem(M_KEY,JSON.stringify({name:$('m-name').value,level:mLevel,start:$('m-start').value,end:$('m-end').value,career:$('m-career').value,goals:mGoals,certs:mCerts.map(c=>({...c,file:c.file?{name:c.file.name,data:c.file.data}:null})),pubs:mPubs,confs:mConfs,teach:mTeach,mtgs:mMtgs,milestones:mMilestones,contacts:mContacts,matrix:mx}))}catch(e){console.warn('Storage',e)}
+}
+function loadM(){
+  try{const s=JSON.parse(localStorage.getItem(M_KEY));if(!s)return false;
+  $('m-name').value=s.name||'';if(s.level){mLevel=s.level;$('m-level').value=s.level}
+  $('m-start').value=s.start||'';$('m-end').value=s.end||'';$('m-career').value=s.career||'';
+  mGoals=s.goals||[];mCerts=(s.certs||[]).map(c=>({...c,file:c.file||null}));
+  mPubs=s.pubs||[];mConfs=s.confs||[];mTeach=s.teach||[];mMtgs=s.mtgs||[];mMilestones=s.milestones||[];mContacts=s.contacts||[];
+  buildMMatrix();
+  if(s.matrix){const rows=document.querySelectorAll('#m-matrix tbody tr');s.matrix.forEach((d,i)=>{if(!rows[i])return;const st=rows[i].querySelector('.mst');if(st)st.value=d.st;const ev=rows[i].querySelector('.mev');if(ev)ev.value=d.ev;const rf=rows[i].querySelector('.mrf');if(rf)rf.value=d.rf;const yrs=rows[i].querySelectorAll('.myr');(d.yrs||[]).forEach((v,j)=>{if(yrs[j])yrs[j].checked=v})})}
+  updateBars();updateMS();return true}catch(e){return false}
+}
+function savePIState(){try{localStorage.setItem(PI_KEY,JSON.stringify({notes:piN,goals:piMG,actions:piActions,refl:[$('refl-q1').value,$('refl-q2').value,$('refl-q3').value,$('refl-q4').value]}))}catch(e){}}
+function loadPI(){try{const s=JSON.parse(localStorage.getItem(PI_KEY));if(!s)return;piN=s.notes||{};piMG=s.goals||{};piActions=s.actions||[];if(s.refl){$('refl-q1').value=s.refl[0]||'';$('refl-q2').value=s.refl[1]||'';$('refl-q3').value=s.refl[2]||'';$('refl-q4').value=s.refl[3]||''}renderMGoals();renderActs()}catch(e){}}
+
+/* ═══════════════════════════════════════
+   MENTEE: GOALS (drag-and-drop)
+   ═══════════════════════════════════════ */
+let dragI=null;
+function addGoal(){mGoals.push({title:'',target:'',status:'Not Started',notes:''});renderGoals();ds()}
+function renderGoals(){const c=$('goals-ctr');if(!mGoals.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No goals yet.</p>';updateMS();return}
+c.innerHTML=mGoals.map((g,i)=>`<div class="goal-card" draggable="true" data-idx="${i}" ondragstart="dragI=${i};this.style.opacity=.4" ondragend="this.style.opacity=1" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="event.preventDefault();this.classList.remove('drag-over');reorderG(dragI,${i})"><div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:end"><span style="cursor:grab;color:var(--ink-mt);font-size:1rem;margin-right:.2rem">⠿</span><div class="fg" style="flex:2;min-width:170px"><label>Goal ${i+1}</label><input type="text" value="${esc(g.title)}" onchange="mGoals[${i}].title=this.value;ds()" placeholder="Goal title"></div><div class="fg" style="flex:1;min-width:110px"><label>Target</label><input type="date" value="${g.target}" onchange="mGoals[${i}].target=this.value;ds()"></div><div class="fg" style="flex:1;min-width:100px"><label>Status</label><select onchange="mGoals[${i}].status=this.value;ds()">${STS.map(s=>'<option'+(s===g.status?' selected':'')+'>'+s+'</option>').join('')}</select></div><button class="btn btn-gh btn-sm" onclick="mGoals.splice(${i},1);renderGoals();ds()">Remove</button></div><div class="fg" style="margin-top:.3rem"><label>Notes</label><textarea rows="2" onchange="mGoals[${i}].notes=this.value;ds()" placeholder="Steps...">${esc(g.notes)}</textarea></div></div>`).join('');updateMS()}
+function reorderG(f,t){if(f===t)return;const x=mGoals.splice(f,1)[0];mGoals.splice(t,0,x);renderGoals();ds()}
+
+/* ═══ MILESTONES / DAC ═══ */
+function addMilestone(){$('dac-form').style.display='block';$('dac-date').value='';$('dac-notes').value=''}
+function saveMilestone(){mMilestones.push({type:$('dac-type').value,date:$('dac-date').value,status:$('dac-status').value,notes:$('dac-notes').value});$('dac-form').style.display='none';mMilestones.sort((a,b)=>(a.date||'').localeCompare(b.date||''));renderMS();ds()}
+function renderMS(){const c=$('dac-tl');if(!mMilestones.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No milestones yet.</p>';return}
+const now=today();c.innerHTML=mMilestones.map((m,i)=>{const cls=m.status==='Completed'?'ms-done':m.date&&m.date<=now?'ms-next':'ms-future';
+return `<div class="ms-item ${cls}"><div class="ms-d">${m.date||'No date'} · <span class="bdg ${SCLS[m.status]||'bdg-ns'}">${m.status}</span></div><div class="ms-t">${m.type}</div>${m.notes?'<div class="ms-desc">'+esc(m.notes)+'</div>':''}<button class="btn btn-gh btn-sm" style="margin-top:.2rem" onclick="mMilestones.splice(${i},1);renderMS();ds()">Remove</button></div>`}).join('')}
+
+/* ═══ CERTIFICATES ═══ */
+function addCert(){mCerts.push({name:'',date:today(),issuer:'',url:'',file:null});renderCerts();ds()}
+function uploadCF(i){const inp=document.createElement('input');inp.type='file';inp.accept='.pdf,.png,.jpg';inp.onchange=e=>{const f=e.target.files[0];if(!f||f.size>2e6){alert('Max 2 MB');return}const r=new FileReader();r.onload=e2=>{mCerts[i].file={name:f.name,data:e2.target.result};renderCerts();ds()};r.readAsDataURL(f)};inp.click()}
+function dlCF(i){const f=mCerts[i].file;if(!f)return;const a=document.createElement('a');a.href=f.data;a.download=f.name;a.click()}
+function renderCerts(){const c=$('cert-list');if(!mCerts.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No certificates yet.</p>';updateMS();return}
+c.innerHTML=mCerts.map((ct,i)=>`<div class="cert-row"><input type="text" value="${esc(ct.name)}" onchange="mCerts[${i}].name=this.value;ds()" placeholder="Name" style="flex:2;font-size:.84rem;padding:.25rem .4rem;border:1px solid var(--brd);border-radius:5px"><input type="text" value="${esc(ct.issuer)}" onchange="mCerts[${i}].issuer=this.value;ds()" placeholder="Issuer" style="flex:1;font-size:.84rem;padding:.25rem .4rem;border:1px solid var(--brd);border-radius:5px"><input type="date" value="${ct.date}" onchange="mCerts[${i}].date=this.value;ds()" style="font-size:.8rem;padding:.25rem .4rem;border:1px solid var(--brd);border-radius:5px"><button class="btn btn-ol btn-sm" onclick="uploadCF(${i})">${ct.file?'Replace':'Upload'}</button>${ct.file?'<span class="cert-file-badge" onclick="dlCF('+i+')">'+esc(ct.file.name)+'</span>':''}<button class="btn btn-gh btn-sm" onclick="mCerts.splice(${i},1);renderCerts();ds()">×</button></div>`).join('');updateMS()}
+
+/* ═══ PUBLICATIONS ═══ */
+function addPub(){mPubs.push({title:'',stage:'Idea',journal:'',coauthors:'',date:'',doi:''});renderPubs();ds()}
+function renderPubs(){const c=$('pub-list');if(!mPubs.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No manuscripts yet.</p>';updateMS();return}
+c.innerHTML=mPubs.map((p,i)=>`<div class="pipe-card"><div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-bottom:.4rem"><span class="pipe-stage ${PUB_CLS[p.stage]||'pipe-idea'}">${p.stage}</span><select onchange="mPubs[${i}].stage=this.value;renderPubs();ds()" style="font-size:.8rem;padding:.2rem .35rem;border:1px solid var(--brd);border-radius:5px">${PUB_STAGES.map(s=>'<option'+(s===p.stage?' selected':'')+'>'+s+'</option>').join('')}</select><button class="btn btn-gh btn-sm" style="margin-left:auto" onclick="mPubs.splice(${i},1);renderPubs();ds()">Remove</button></div><div class="fgrid"><div class="fg" style="grid-column:1/-1"><input type="text" value="${esc(p.title)}" onchange="mPubs[${i}].title=this.value;ds()" placeholder="Manuscript title" style="font-weight:600"></div></div><div class="fgrid" style="margin-top:.3rem"><div class="fg"><input type="text" value="${esc(p.journal)}" onchange="mPubs[${i}].journal=this.value;ds()" placeholder="Target journal"></div><div class="fg"><input type="text" value="${esc(p.coauthors)}" onchange="mPubs[${i}].coauthors=this.value;ds()" placeholder="Co-authors"></div><div class="fg"><input type="text" value="${esc(p.doi)}" onchange="mPubs[${i}].doi=this.value;ds()" placeholder="DOI (if published)"></div></div></div>`).join('');updateMS()}
+
+/* ═══ CONFERENCES ═══ */
+function addConf(){mConfs.push({title:'',venue:'',date:'',type:'Poster',invited:false});renderConfs();ds()}
+function renderConfs(){const c=$('conf-list');if(!mConfs.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No presentations yet.</p>';return}
+c.innerHTML=mConfs.map((cf,i)=>`<div style="display:flex;gap:.4rem;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--brd-lt);font-size:.84rem;flex-wrap:wrap"><span class="bdg ${cf.invited?'bdg-pp':'bdg-ip'}">${cf.type}${cf.invited?' (invited)':''}</span><input type="text" value="${esc(cf.title)}" onchange="mConfs[${i}].title=this.value;ds()" placeholder="Title" style="flex:2;font-size:.84rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px"><input type="text" value="${esc(cf.venue)}" onchange="mConfs[${i}].venue=this.value;ds()" placeholder="Venue/Conference" style="flex:1;font-size:.84rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px"><input type="date" value="${cf.date}" onchange="mConfs[${i}].date=this.value;ds()" style="font-size:.8rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px"><select onchange="mConfs[${i}].type=this.value;renderConfs();ds()" style="font-size:.8rem;padding:.2rem .35rem;border:1px solid var(--brd);border-radius:5px"><option${cf.type==='Poster'?' selected':''}>Poster</option><option${cf.type==='Talk'?' selected':''}>Talk</option><option${cf.type==='Seminar'?' selected':''}>Seminar</option></select><label style="font-size:.78rem"><input type="checkbox" ${cf.invited?'checked':''} onchange="mConfs[${i}].invited=this.checked;renderConfs();ds()"> Invited</label><button class="btn btn-gh btn-sm" onclick="mConfs.splice(${i},1);renderConfs();ds()">×</button></div>`).join('')}
+
+/* ═══ TEACHING ═══ */
+function addTeach(){mTeach.push({activity:'',role:'',hours:'',date:'',students:''});renderTeach();ds()}
+function renderTeach(){const c=$('teach-list');if(!mTeach.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No entries yet.</p>';return}
+c.innerHTML=mTeach.map((t,i)=>`<div style="display:flex;gap:.4rem;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--brd-lt);font-size:.84rem;flex-wrap:wrap"><input type="text" value="${esc(t.activity)}" onchange="mTeach[${i}].activity=this.value;ds()" placeholder="Activity" style="flex:2;font-size:.84rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px"><select onchange="mTeach[${i}].role=this.value;ds()" style="font-size:.8rem;padding:.2rem;border:1px solid var(--brd);border-radius:5px"><option${t.role==='TA'?' selected':''}>TA</option><option${t.role==='Mentor'?' selected':''}>Mentor</option><option${t.role==='Guest Lecturer'?' selected':''}>Guest Lecturer</option><option${t.role==='Outreach'?' selected':''}>Outreach</option></select><input type="number" value="${t.hours}" onchange="mTeach[${i}].hours=this.value;ds()" placeholder="Hours" style="width:60px;font-size:.84rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px"><input type="date" value="${t.date}" onchange="mTeach[${i}].date=this.value;ds()" style="font-size:.8rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px"><button class="btn btn-gh btn-sm" onclick="mTeach.splice(${i},1);renderTeach();ds()">×</button></div>`).join('')}
+
+/* ═══ MEETING LOG ═══ */
+function addMeeting(){mMtgs.unshift({date:today(),notes:'',actions:[{text:'',done:false}]});renderMtgs();ds()}
+function renderMtgs(){const c=$('mtg-list');if(!mMtgs.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No meetings logged yet.</p>';return}
+c.innerHTML=mMtgs.map((m,i)=>`<div class="mtg-card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="mtg-date">Meeting ${mMtgs.length-i} — <input type="date" value="${m.date}" onchange="mMtgs[${i}].date=this.value;ds()" style="font-size:.82rem;border:1px solid var(--brd);border-radius:4px;padding:.1rem .3rem"></div><button class="btn btn-gh btn-sm" onclick="mMtgs.splice(${i},1);renderMtgs();ds()">Remove</button></div><div class="fg" style="margin:.4rem 0"><label>Discussion Notes</label><textarea rows="2" onchange="mMtgs[${i}].notes=this.value;ds()" placeholder="Key discussion points...">${esc(m.notes)}</textarea></div><div class="mtg-actions"><div style="font-size:.78rem;font-weight:600;color:var(--ink-lt);text-transform:uppercase;margin-bottom:.2rem">Action Items</div>${m.actions.map((a,j)=>`<div class="mtg-action${a.done?' done':''}"><input type="checkbox" ${a.done?'checked':''} onchange="mMtgs[${i}].actions[${j}].done=this.checked;renderMtgs();ds()"><span><input type="text" value="${esc(a.text)}" onchange="mMtgs[${i}].actions[${j}].text=this.value;ds()" placeholder="Action item..." style="font-size:.84rem;border:none;background:transparent;width:100%;${a.done?'text-decoration:line-through;opacity:.5':''}"></span><button class="btn btn-gh btn-sm" onclick="mMtgs[${i}].actions.splice(${j},1);renderMtgs();ds()">×</button></div>`).join('')}<button class="btn btn-ol btn-sm" style="margin-top:.3rem" onclick="mMtgs[${i}].actions.push({text:'',done:false});renderMtgs();ds()">+ Action</button>${i===0&&mMtgs.length>1?rollForwardHTML(i):''}</div></div>`).join('')}
+function rollForwardHTML(i){const prev=mMtgs[1];if(!prev)return '';const pending=prev.actions.filter(a=>!a.done);if(!pending.length)return '';return `<div style="margin-top:.5rem;font-size:.8rem;color:var(--or);font-weight:600">Carried from previous: ${pending.length} item(s) <button class="btn btn-o btn-sm" onclick="carryForward(${i})">Pull forward</button></div>`}
+function carryForward(i){if(!mMtgs[i+1])return;const pending=mMtgs[i+1].actions.filter(a=>!a.done).map(a=>({text:a.text,done:false}));mMtgs[i].actions.push(...pending);renderMtgs();ds()}
+
+/* ═══ NETWORKING ═══ */
+function addContact(){mContacts.push({name:'',org:'',email:'',met:'',event:'',followup:'none',notes:''});renderNet();ds()}
+function renderNet(){const c=$('net-list');
+$('net-total').textContent=mContacts.length;
+$('net-pending').textContent=mContacts.filter(c=>c.followup==='pending').length;
+$('net-events').textContent=new Set(mContacts.map(c=>c.event).filter(Boolean)).size;
+if(!mContacts.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No contacts yet.</p>';return}
+c.innerHTML=mContacts.map((ct,i)=>`<div class="net-card"><div class="net-avatar">${(ct.name||'?')[0].toUpperCase()}</div><div class="net-info"><div style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center"><input type="text" value="${esc(ct.name)}" onchange="mContacts[${i}].name=this.value;renderNet();ds()" placeholder="Name" style="font-weight:600;font-size:.9rem;border:none;background:transparent;min-width:120px"><span class="net-followup net-fu-${ct.followup==='pending'?'pending':ct.followup==='done'?'done':'none'}">${ct.followup==='pending'?'Follow-up needed':ct.followup==='done'?'Connected':'New'}</span></div><div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.2rem"><input type="text" value="${esc(ct.org)}" onchange="mContacts[${i}].org=this.value;ds()" placeholder="Organization" style="font-size:.82rem;padding:.15rem .3rem;border:1px solid var(--brd);border-radius:4px;width:130px"><input type="email" value="${esc(ct.email)}" onchange="mContacts[${i}].email=this.value;ds()" placeholder="Email" style="font-size:.82rem;padding:.15rem .3rem;border:1px solid var(--brd);border-radius:4px;width:150px"><input type="text" value="${esc(ct.event)}" onchange="mContacts[${i}].event=this.value;ds()" placeholder="Where met" style="font-size:.82rem;padding:.15rem .3rem;border:1px solid var(--brd);border-radius:4px;width:120px"><input type="date" value="${ct.met}" onchange="mContacts[${i}].met=this.value;ds()" style="font-size:.78rem;padding:.15rem .3rem;border:1px solid var(--brd);border-radius:4px"><select onchange="mContacts[${i}].followup=this.value;renderNet();ds()" style="font-size:.78rem;padding:.15rem .3rem;border:1px solid var(--brd);border-radius:4px"><option value="none"${ct.followup==='none'?' selected':''}>New</option><option value="pending"${ct.followup==='pending'?' selected':''}>Follow-up needed</option><option value="done"${ct.followup==='done'?' selected':''}>Connected</option></select></div></div><button class="btn btn-gh btn-sm" onclick="mContacts.splice(${i},1);renderNet();ds()">×</button></div>`).join('')}
+
+/* ═══ TRAINING MATRIX ═══ */
+function buildMMatrix(){const lv=mLevel,yrs=getYrs(lv),ctr=$('m-matrix');ctr.innerHTML='';
+MA.forEach((area,ai)=>{let sk=[];area.topics.forEach(t=>t.skills.forEach(s=>{if(s.level.includes(lv))sk.push({...s,topic:t.topic})}));if(!sk.length)return;
+const btn=document.createElement('button');btn.className='acc-btn';btn.innerHTML=`<span>${area.group}</span><span class="apct" id="apct-${ai}">0%</span><span class="arr">▼</span>`;
+const bd=document.createElement('div');bd.className='acc-body';bd.id=`abody-${ai}`;
+btn.onclick=()=>{btn.classList.toggle('open');bd.classList.toggle('open')};
+let h=`<div style="overflow-x:auto"><table class="dtbl"><thead><tr><th>Topic</th><th>Skill</th><th>Status</th><th>Evidence</th><th>Reflection</th>${yrs.map(y=>'<th>'+y+'</th>').join('')}<th>%</th></tr></thead><tbody>`;
+sk.forEach((s,si)=>{h+=`<tr><td style="font-weight:500;color:var(--bl-deep);font-size:.78rem">${s.topic}</td><td style="font-size:.84rem">${s.name}</td><td><select class="mst" onchange="updateBars();updateMS();ds()" style="font-size:.78rem;padding:.18rem .3rem;border-radius:4px;border:1px solid var(--brd)">${STS.map(st=>'<option>'+st+'</option>').join('')}</select></td><td><input type="url" class="mev" placeholder="Link..." onchange="ds()" style="width:90px;font-size:.78rem;padding:.18rem .3rem;border:1px solid var(--brd);border-radius:4px"></td><td><textarea class="mrf" rows="1" placeholder="${REFL['Not Started']}" onchange="ds()" style="width:100px;font-size:.78rem;padding:.18rem .3rem;border:1px solid var(--brd);border-radius:4px;resize:vertical"></textarea></td>${yrs.map(()=>'<td style="text-align:center"><input type="checkbox" class="myr" onchange="updateBars();updateMS();ds()"></td>').join('')}<td><div style="background:#ecf0f4;border-radius:4px;height:7px;overflow:hidden"><div class="mrb" style="height:7px;border-radius:4px;width:0%;transition:width .2s"></div></div><div class="mrp" style="font-size:.7rem;font-weight:600;text-align:center">0%</div></td></tr>`});
+h+='</tbody></table></div>';bd.innerHTML=h;ctr.appendChild(btn);ctr.appendChild(bd)});
+const fb=ctr.querySelector('.acc-btn');if(fb)fb.click();updateBars();updateMS()}
+function updateBars(){document.querySelectorAll('#m-matrix tbody tr').forEach(tr=>{const ck=tr.querySelectorAll('.myr');const d=[...ck].filter(c=>c.checked).length;const p=ck.length?Math.round(d/ck.length*100):0;const b=tr.querySelector('.mrb');if(b){b.style.width=p+'%';b.style.background=p===100?'var(--grn)':p>=50?'var(--bl-br)':'var(--or-warm)'}const l=tr.querySelector('.mrp');if(l)l.textContent=p+'%'});
+MA.forEach((_,ai)=>{const bd=$(`abody-${ai}`);if(!bd)return;const ck=bd.querySelectorAll('.myr');const d=[...ck].filter(c=>c.checked).length;const p=ck.length?Math.round(d/ck.length*100):0;const el=$(`apct-${ai}`);if(el)el.textContent=p+'%'})}
+function updateMS(){let tot=0,done=0,comp=0,ip=0;document.querySelectorAll('#m-matrix tbody tr').forEach(tr=>{const st=tr.querySelector('.mst')?.value||'Not Started';if(st==='Complete')comp++;if(st==='In Progress')ip++;tr.querySelectorAll('.myr').forEach(c=>{tot++;if(c.checked||st==='Complete')done++})});
+$('ms-pct').textContent=(tot?Math.round(done/tot*100):0)+'%';$('ms-done').textContent=comp;$('ms-ip').textContent=ip;$('ms-goals').textContent=mGoals.length;$('ms-pubs').textContent=mPubs.length;$('ms-certs').textContent=mCerts.length;
+// Show DAC section only for PhD/MD-PhD
+$('sec-dac').style.display=['phd','md/phd'].includes(mLevel)?'block':'none';
+drawMR()}
+
+/* ═══ RADAR ═══ */
+// Short readable labels for radar axes
+const RADAR_SHORT={
+  "Core Lab Practices":"Core Lab","Personal & Professional Development":"Professional Dev",
+  "Technical & Research Skills":"Technical Skills","Scientific Communication":"Sci Communication",
+  "Academic & Clinical Training":"Academic & Clinical","Progress Monitoring":"Progress & Feedback",
+  "Lab Operations & Staff":"Lab Operations",
+  // Topic-level names (PI side)
+  "Lab Safety & Biosafety":"Lab Safety","Responsible Conduct & Integrity":"Research Integrity",
+  "Data Stewardship & FAIR":"Data & FAIR","Open Science Practices":"Open Science",
+  "EDIA & Accessibility":"EDIA","Team Communication":"Team Comm",
+  "Meetings & Journal Clubs":"Journal Clubs","Patient Engagement":"Patient Engage",
+  "Personal Development":"Personal Dev","Professional Growth":"Prof Growth",
+  "Leadership & Mentoring":"Leadership","Cell & Molecular Biology":"Cell & Mol Bio",
+  "Zebrafish Techniques":"Zebrafish","Data & Visualization":"Data & Viz",
+  "Computational Biology":"Computational","Science Communication":"Sci Comm",
+  "Ethics & Advocacy":"Ethics","Open Science Tools":"Open Science Tools",
+  "Formal Education":"Formal Ed","Clinical Exposure":"Clinical Exp",
+  "Seminars & Clubs":"Seminars","Evaluations":"Evaluations","Feedback":"Feedback",
+  "Formal Education & Clinical Training":"Formal Education",
+  "Clinical Exposure & Translational Research":"Clinical & Translational",
+  "Seminars, Workshops & Professional Clubs":"Seminars & Workshops",
+  "Regular Evaluations":"Evaluations","Feedback & Reflection":"Feedback",
+  "Instrumentation & Facility Mgt":"Instruments","Regulatory Compliance & Safety":"Regulatory",
+  "Sample & Data Logistics":"Sample Logistics","Protocol Optimization & SOPs":"SOPs",
+  "Budgeting & Purchasing":"Budgeting","Training & Onboarding":"Onboarding",
+  "Project Coordination":"Coordination"
+};
+function shortLabel(lb){return RADAR_SHORT[lb]||(lb.length>22?lb.slice(0,20)+'…':lb)}
+function drawR(cid,labels,vals,col){
+  const S=400,C=S/2,R=S/2-70,n=labels.length;if(!n)return;
+  const step=2*Math.PI/n,MIN_R=R*0.08;
+  let svg=`<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg">`;
+  // Grid rings with % labels
+  for(let i=1;i<=5;i++){const r=R*(i/5);let pts=[];for(let j=0;j<n;j++){const a=step*j-Math.PI/2;pts.push(`${C+r*Math.cos(a)},${C+r*Math.sin(a)}`)}
+    svg+=`<polygon points="${pts.join(' ')}" fill="none" stroke="#e2e8f0" stroke-width="0.7"/>`;
+    svg+=`<text x="${C+4}" y="${C-r+3}" style="font-size:7px;fill:#c0c8d4">${i*20}%</text>`}
+  // Axes + labels
+  labels.forEach((lb,i)=>{const a=step*i-Math.PI/2;
+    svg+=`<line x1="${C}" y1="${C}" x2="${C+R*Math.cos(a)}" y2="${C+R*Math.sin(a)}" stroke="#e2e8f0" stroke-width="0.5"/>`;
+    const pad=34,lx=C+(R+pad)*Math.cos(a),ly=C+(R+pad)*Math.sin(a);
+    const anc=Math.abs(Math.cos(a))<.15?'middle':Math.cos(a)>0?'start':'end';
+    const sl=shortLabel(lb);
+    svg+=`<text x="${lx}" y="${ly}" text-anchor="${anc}" dominant-baseline="middle" style="font-size:10px;fill:#4a5c72;font-weight:500">${sl}</text>`});
+  // Data polygon with minimum visual radius
+  let pts=vals.map((v,i)=>{const a=step*i-Math.PI/2;const r=Math.max(R*(Math.min(v,100)/100),v>0?MIN_R:0);return`${C+r*Math.cos(a)},${C+r*Math.sin(a)}`}).join(' ');
+  svg+=`<polygon points="${pts}" fill="${col}20" stroke="${col}" stroke-width="2.2"/>`;
+  // Vertex dots + percentage labels
+  vals.forEach((v,i)=>{const a=step*i-Math.PI/2;const r=Math.max(R*(Math.min(v,100)/100),v>0?MIN_R:0);
+    const cx=C+r*Math.cos(a),cy=C+r*Math.sin(a);
+    svg+=`<circle cx="${cx}" cy="${cy}" r="4" fill="${col}" stroke="#fff" stroke-width="2"/>`;
+    // Show % near each point
+    const tx=C+(r+14)*Math.cos(a),ty=C+(r+14)*Math.sin(a);
+    svg+=`<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" style="font-size:9px;fill:${col};font-weight:700">${v}%</text>`});
+  svg+='</svg>';$(cid).innerHTML=svg}
+function drawMR(){const lb=[],vl=[];MA.forEach((_,ai)=>{const bd=$(`abody-${ai}`);if(!bd)return;const ck=bd.querySelectorAll('.myr');if(!ck.length)return;lb.push(MA[ai].group);vl.push(Math.round([...ck].filter(c=>c.checked).length/ck.length*100))});
+if(lb.length>=3)drawR('m-radar',lb,vl,'#2176ae');else $('m-radar').innerHTML='<p style="text-align:center;font-size:.82rem;color:var(--ink-mt)">Radar appears after 3+ areas tracked.</p>'}
+
+/* ═══ MENTEE EXPORTS ═══ */
+function exportMCSV(){const nm=$('m-name').value.trim(),lv=mLevel,yrs=getYrs(lv);const hdr=['Name','Level','Topic','Skill','Status','Evidence','Reflection',...yrs.map(String)];const rows=[hdr];document.querySelectorAll('#m-matrix tbody tr').forEach(tr=>{const tds=tr.querySelectorAll('td');rows.push([nm,lv,tds[0].textContent,tds[1].textContent,tr.querySelector('.mst').value,tr.querySelector('.mev').value,tr.querySelector('.mrf').value,...[...tr.querySelectorAll('.myr')].map(c=>c.checked?'✔':'')])});const csv='#MatrixVersion=2.2\n'+rows.map(r=>r.map(csvE).join(',')).join('\n');const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`serrano_idp_${(nm||'trainee').replace(/\s+/g,'_')}_${today()}.csv`;a.click()}
+function sendProgress(){const nm=$('m-name').value.trim();if(!nm){alert('Enter your name.');return}const email=prompt('Enter your email:');if(!email)return;$('fEmail').value=email;$('fCSV').value=exportMCSV_str();$('matrixForm').submit()}
+function exportMCSV_str(){const nm=$('m-name').value.trim(),lv=mLevel,yrs=getYrs(lv);const hdr=['Name','Level','Topic','Skill','Status','Evidence','Reflection',...yrs.map(String)];const rows=[hdr];document.querySelectorAll('#m-matrix tbody tr').forEach(tr=>{const tds=tr.querySelectorAll('td');rows.push([nm,lv,tds[0].textContent,tds[1].textContent,tr.querySelector('.mst').value,tr.querySelector('.mev').value,tr.querySelector('.mrf').value,...[...tr.querySelectorAll('.myr')].map(c=>c.checked?'✔':'')])});return'#MatrixVersion=2.2\n'+rows.map(r=>r.map(csvE).join(',')).join('\n')}
+function exportIDP(){const nm=$('m-name').value.trim()||'Trainee';let t=`INDIVIDUAL DEVELOPMENT PLAN\nSerrano Lab — Boston University CReM\n${'═'.repeat(50)}\n\nName: ${nm}\nLevel: ${mLevel.toUpperCase()}\n`;if($('m-start').value)t+=`Start: ${$('m-start').value}\n`;if($('m-end').value)t+=`End: ${$('m-end').value}\n`;if($('m-career').value)t+=`\nCareer Goal:\n${$('m-career').value}\n`;
+t+=`\n${'─'.repeat(50)}\nSMART GOALS\n${'─'.repeat(50)}\n`;mGoals.forEach((g,i)=>{t+=`\n${i+1}. ${g.title||'(untitled)'}\n   Status: ${g.status} | Target: ${g.target||'TBD'}\n`;if(g.notes)t+=`   Notes: ${g.notes}\n`});
+if(mMilestones.length){t+=`\n${'─'.repeat(50)}\nDAC & MILESTONES\n${'─'.repeat(50)}\n`;mMilestones.forEach(m=>{t+=`• ${m.date||'TBD'} — ${m.type} [${m.status}]${m.notes?' '+m.notes:''}\n`})}
+t+=`\n${'─'.repeat(50)}\nCERTIFICATES\n${'─'.repeat(50)}\n`;mCerts.forEach(c=>{t+=`• ${c.name||'(unnamed)'} — ${c.issuer||''} (${c.date||''})\n`});
+if(mPubs.length){t+=`\n${'─'.repeat(50)}\nPUBLICATION PIPELINE\n${'─'.repeat(50)}\n`;mPubs.forEach(p=>{t+=`• [${p.stage}] ${p.title||'Untitled'}${p.journal?' — '+p.journal:''}${p.doi?' DOI:'+p.doi:''}\n`})}
+if(mConfs.length){t+=`\n${'─'.repeat(50)}\nCONFERENCES & PRESENTATIONS\n${'─'.repeat(50)}\n`;mConfs.forEach(c=>{t+=`• ${c.date||''} ${c.type}${c.invited?' (invited)':''}: ${c.title||''}${c.venue?' — '+c.venue:''}\n`})}
+if(mTeach.length){t+=`\n${'─'.repeat(50)}\nTEACHING & OUTREACH\n${'─'.repeat(50)}\n`;const totalH=mTeach.reduce((s,x)=>s+(+x.hours||0),0);t+=`Total hours: ${totalH}\n`;mTeach.forEach(x=>{t+=`• ${x.date||''} ${x.role}: ${x.activity||''} (${x.hours||0}h)\n`})}
+t+=`\n${'─'.repeat(50)}\nTRAINING PROGRESS\n${'─'.repeat(50)}\n`;let tA=0,dA=0;MA.forEach((_,ai)=>{const bd=$(`abody-${ai}`);if(!bd)return;const ck=bd.querySelectorAll('.myr');const d=[...ck].filter(c=>c.checked).length;if(ck.length){t+=`${MA[ai].group}: ${Math.round(d/ck.length*100)}%\n`;tA+=ck.length;dA+=d}});
+t+=`\nOverall: ${tA?Math.round(dA/tA*100):0}%\nGenerated: ${new Date().toLocaleDateString()}\n`;dlText(t,`IDP_${nm.replace(/\s+/g,'_')}_${today()}.txt`)}
+function exportCV(){const nm=$('m-name').value.trim()||'Trainee';let t=`CV COMPONENTS — ${nm}\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+t+=`PUBLICATIONS\n${'─'.repeat(40)}\n`;mPubs.filter(p=>['Accepted','Published'].includes(p.stage)).forEach(p=>{t+=`${p.title||'Untitled'}. ${p.coauthors||''}. ${p.journal||''}. ${p.doi||''}\n\n`});
+mPubs.filter(p=>!['Accepted','Published'].includes(p.stage)).forEach(p=>{t+=`[${p.stage}] ${p.title||'Untitled'}. ${p.coauthors||''}. Target: ${p.journal||''}\n\n`});
+t+=`\nPRESENTATIONS\n${'─'.repeat(40)}\n`;mConfs.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).forEach(c=>{t+=`${c.date||''} — ${c.title||''}. ${c.type}${c.invited?' (Invited)':''}. ${c.venue||''}.\n`});
+t+=`\nTEACHING & MENTORING\n${'─'.repeat(40)}\n`;mTeach.forEach(x=>{t+=`${x.date||''} — ${x.activity||''} (${x.role}, ${x.hours||0}h)\n`});
+t+=`\nCERTIFICATIONS\n${'─'.repeat(40)}\n`;mCerts.forEach(c=>{t+=`${c.name||''} — ${c.issuer||''} (${c.date||''})\n`});
+dlText(t,`CV_components_${nm.replace(/\s+/g,'_')}_${today()}.txt`)}
+
+$('m-level').addEventListener('change',function(){mLevel=this.value;buildMMatrix();ds()});
+$('m-filter-inc').addEventListener('change',()=>buildMMatrix());
+['m-name','m-start','m-end','m-career'].forEach(id=>$(id)?.addEventListener('input',ds));
+
+/* ═══════════════════════════════════════
+   MENTOR / PI (same as v2.1)
+   ═══════════════════════════════════════ */
+function parseCSVL(line){const res=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(inQ){if(ch==='"'&&line[i+1]==='"'){cur+='"';i++}else if(ch==='"')inQ=false;else cur+=ch}else{if(ch==='"')inQ=true;else if(ch===','){res.push(cur.trim());cur=''}else cur+=ch}}res.push(cur.trim());return res}
+function parseTr(text,fn){const rows=text.trim().split(/\r?\n/).map(parseCSVL);let ds=1;if(rows[0][0]?.startsWith('#MatrixVersion=')){ds=2}const data=rows.slice(ds).filter(r=>r.length>=5);const name=data[0]?.[0]||fn.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ');const level=data[0]?.[1]||'';let tot=0,done=0,byA={},skills=[],goals=0,blk=0;
+data.forEach(r=>{const[,,topic,skill,status,ev,refl,...yrs]=r;const cnt=yrs.length,chk=yrs.filter(y=>y==='✔').length;const extra=status==='Complete'?cnt-chk:0;tot+=cnt;done+=chk+extra;byA[topic]=byA[topic]||{done:0,total:0};byA[topic].done+=chk+extra;byA[topic].total+=cnt;skills.push({area:topic,skill,status,evidence:ev,reflection:refl,yrs});if(status!=='Complete')goals++;if(status==='Blocked')blk++});
+return{name,level,percent:tot?Math.round(done/tot*100):0,goalCount:goals,blocked:blk,byArea:byA,skills,fn}}
+const drop=$('pi-drop'),piIn=$('pi-fin');drop.onclick=()=>piIn.click();
+drop.addEventListener('dragover',e=>{e.preventDefault();drop.style.borderColor='var(--or)'});drop.addEventListener('dragleave',()=>{drop.style.borderColor='var(--bl)'});
+drop.addEventListener('drop',e=>{e.preventDefault();drop.style.borderColor='var(--bl)';handlePIF(e.dataTransfer.files)});piIn.addEventListener('change',()=>handlePIF(piIn.files));
+function handlePIF(files){Promise.all(Array.from(files).map(f=>new Promise(res=>{const r=new FileReader();r.onload=e=>res({name:f.name,csv:e.target.result});r.readAsText(f)}))).then(arr=>{arr.forEach(o=>{const p=parseTr(o.csv,o.name);const ex=piT.findIndex(t=>t.name===p.name);if(ex>=0){piT[ex]=p;piCSV[ex]=o}else{piT.push(p);piCSV.push(o)}});$('pi-loaded').textContent=piT.length+' trainee(s): '+piT.map(t=>t.name).join(', ');popSels();renderPI()})}
+function popSels(){const opts=piT.map(t=>`<option value="${t.name}">${t.name} (${t.level})</option>`).join('');['pi-det-sel','mg-who','ref-who'].forEach(id=>{$(id).innerHTML='<option value="">— Select —</option>'+opts});const areas=new Set();piT.forEach(t=>Object.keys(t.byArea).forEach(a=>areas.add(a)));$('pf-area').innerHTML='<option value="all">All Areas</option>'+[...areas].sort().map(a=>`<option>${a}</option>`).join('')}
+function renderPI(){const lv=$('pf-lev').value,area=$('pf-area').value;let flt=piT.filter(t=>(lv==='all'||t.level===lv)&&(area==='all'||t.byArea[area]));
+if(!flt.length){$('pi-cards').innerHTML='<p style="text-align:center;color:var(--ink-mt);padding:1.5rem">No matching trainees.</p>';return}
+const pcts=flt.map(t=>area!=='all'&&t.byArea[area]?Math.round(t.byArea[area].done/t.byArea[area].total*100):t.percent);const avg=Math.round(pcts.reduce((s,v)=>s+v,0)/pcts.length);
+$('ps-avg').textContent=avg+'%';$('ps-n').textContent=flt.length;$('ps-gaps').textContent=flt.reduce((s,t)=>s+t.goalCount,0);$('ps-blocked').textContent=flt.reduce((s,t)=>s+t.blocked,0);
+const am={};flt.forEach(t=>Object.entries(t.byArea).forEach(([k,v])=>{am[k]=am[k]||{done:0,total:0};am[k].done+=v.done;am[k].total+=v.total}));
+const rl=Object.keys(am),rv=rl.map(k=>Math.round(am[k].done/am[k].total*100));if(rl.length>=3)drawR('pi-radar',rl,rv,'#2a9d8f');
+const grid=$('pi-cards');grid.innerHTML='';flt.forEach(t=>{const pct=area!=='all'&&t.byArea[area]?Math.round(t.byArea[area].done/t.byArea[area].total*100):t.percent;const card=document.createElement('div');card.className='tcard';
+let arH='';(area!=='all'?[area]:Object.keys(t.byArea)).forEach(a=>{const ap=Math.round(t.byArea[a].done/t.byArea[a].total*100);arH+=`<div class="tc-ar"><span class="an">${a}</span><div class="ab-w"><div class="ab" style="width:${ap}%"></div></div><span class="ap">${ap}%</span></div>`});
+const note=piN[t.name]||'';card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:start"><div><span class="tc-n">${t.name}</span> <span style="font-size:.78rem;color:var(--ink-mt)">[${t.level}]</span></div><span class="bdg ${pct>=80?'bdg-ok':pct>=50?'bdg-ip':'bdg-bk'}">${pct>=80?'On Track':pct>=50?'Growing':'Support Needed'}</span></div><div class="tc-pct">${pct}%</div><div class="tc-bar-w"><div class="tc-bar" style="width:${pct}%"></div></div><div style="font-size:.82rem;margin:.2rem 0">Goals: <strong>${t.goalCount}</strong>${t.blocked?' · <span style="color:var(--red)">'+t.blocked+' blocked</span>':''}</div><div style="margin:.3rem 0">${arH}</div>${note?'<div style="background:var(--bl-ghost);border-left:3px solid var(--bl);padding:.4rem .6rem;border-radius:5px;margin-top:.3rem;font-size:.82rem"><strong>Note:</strong> '+note.replace(/\n/g,'<br>')+'</div>':''}<div class="brow" style="justify-content:center"><button class="btn btn-p btn-sm" onclick="openNote('${t.name.replace(/'/g,"\\'")}')">Note</button>${note?'<button class="btn btn-gh btn-sm" onclick="delete piN[\''+t.name.replace(/'/g,"\\'")+'\'];savePIState();renderPI()">×</button>':''}</div>`;grid.appendChild(card)});
+// Heatmap
+if(!flt.length){$('pi-hm').innerHTML='';return}const keys=[];flt.forEach(t=>t.skills.forEach(s=>{if(!keys.find(k=>k.area===s.area&&k.skill===s.skill))keys.push(s)}));let h='<table class="hm"><thead><tr><th style="text-align:left">Skill</th>';flt.forEach(t=>h+=`<th>${t.name}</th>`);h+='</tr></thead><tbody>';keys.forEach(s=>{h+=`<tr><td style="text-align:left;font-size:.76rem"><strong>${s.skill}</strong><br><span style="color:var(--ink-mt)">${s.area}</span></td>`;flt.forEach(t=>{const m=t.skills.find(x=>x.area===s.area&&x.skill===s.skill);const p=m?m.yrs.filter(y=>y==='✔').length/(m.yrs.length||1):0;const bg=p>=1?'var(--grn)':p>=.5?'var(--bl-br)':p>0?'var(--bl-wash)':'#f8f8f8';h+=`<td style="background:${bg};color:${p>=.5?'#fff':'var(--ink)'};font-weight:600">${Math.round(p*100)}%</td>`});h+='</tr>'});h+='</tbody></table>';$('pi-hm').innerHTML=h;
+// Insights
+const ins=$('pi-insights');const totalB=flt.reduce((s,t)=>s+t.blocked,0);const low=Object.entries(am).sort((a,b)=>(a[1].done/a[1].total)-(b[1].done/b[1].total))[0];
+let ih='';if(totalB>0)ih+=`<div style="background:var(--or-wash);border-left:3px solid var(--or);padding:.4rem .7rem;border-radius:5px;margin-bottom:.4rem;font-size:.86rem"><strong>${totalB} blocked item(s)</strong> — consider shared barriers.</div>`;
+if(low)ih+=`<div style="background:var(--bl-wash);border-left:3px solid var(--bl);padding:.4rem .7rem;border-radius:5px;margin-bottom:.4rem;font-size:.86rem">Lowest coverage: <strong>${low[0]}</strong> at ${Math.round(low[1].done/low[1].total*100)}%.</div>`;ins.innerHTML=ih}
+function openNote(nm){const m=$('modal-ov'),bx=$('modal-bx');bx.innerHTML=`<h3>Note: ${nm}</h3><div class="fg"><textarea id="mn-txt" rows="6" style="width:100%">${piN[nm]||''}</textarea></div><div class="brow"><button class="btn btn-p" onclick="piN['${nm.replace(/'/g,"\\'")}']=$('mn-txt').value.trim();savePIState();closeM();renderPI()">Save</button><button class="btn btn-ol" onclick="closeM()">Cancel</button></div>`;m.classList.add('active')}
+function closeM(){$('modal-ov').classList.remove('active')}
+$('modal-ov').addEventListener('click',e=>{if(e.target===$('modal-ov'))closeM()});
+function addMGoal(){const who=$('mg-who').value;if(!who){alert('Select trainee.');return}const desc=$('mg-desc').value.trim();if(!desc){alert('Enter goal.');return}if(!piMG[who])piMG[who]=[];piMG[who].push({area:$('mg-area').value,desc,date:$('mg-date').value,status:$('mg-st').value});$('mg-desc').value='';renderMGoals();savePIState()}
+function renderMGoals(){const c=$('mg-list');let h='';Object.entries(piMG).forEach(([nm,gs])=>{if(!gs.length)return;h+=`<div style="margin-bottom:.5rem"><strong style="color:var(--bl-deep)">${nm}</strong>`;gs.forEach((g,i)=>{h+=`<div style="display:flex;gap:.3rem;align-items:center;padding:.3rem 0;border-bottom:1px solid var(--brd-lt);font-size:.82rem"><span class="bdg ${SCLS[g.status]||'bdg-ns'}">${g.status}</span><span style="flex:1">${g.desc}</span><span style="color:var(--ink-mt);font-size:.74rem">${g.date||''}</span><button class="btn btn-gh btn-sm" onclick="piMG['${nm.replace(/'/g,"\\'")}'].splice(${i},1);renderMGoals();savePIState()">×</button></div>`});h+='</div>'});c.innerHTML=h||'<p style="color:var(--ink-mt);font-size:.84rem">No goals yet.</p>'}
+function addMAction(){piActions.push({text:'',done:false});renderActs();savePIState()}
+function renderActs(){const c=$('pi-actions');if(!piActions.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.84rem">No actions yet.</p>';return}c.innerHTML=piActions.map((a,i)=>`<div style="display:flex;gap:.4rem;align-items:center;padding:.3rem 0;border-bottom:1px solid var(--brd-lt)"><input type="checkbox" ${a.done?'checked':''} onchange="piActions[${i}].done=this.checked;savePIState()"><input type="text" value="${esc(a.text)}" onchange="piActions[${i}].text=this.value;savePIState()" placeholder="Action..." style="flex:1;font-size:.84rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:4px;${a.done?'text-decoration:line-through;opacity:.5':''}"><button class="btn btn-gh btn-sm" onclick="piActions.splice(${i},1);renderActs();savePIState()">×</button></div>`).join('')}
+$('pi-det-sel').addEventListener('change',function(){const nm=this.value,c=$('pi-det-content');if(!nm){c.innerHTML='<p style="color:var(--ink-mt);text-align:center;padding:1rem">Select a trainee.</p>';return}const t=piT.find(x=>x.name===nm);if(!t)return;const goals=piMG[nm]||[],note=piN[nm]||'';let h=`<div class="stats"><div class="stc"><div class="sv">${t.percent}%</div><div class="sl">Overall</div></div><div class="stc"><div class="sv">${t.goalCount}</div><div class="sl">Goals</div></div><div class="stc"><div class="sv">${t.skills.filter(s=>s.status==='Complete').length}</div><div class="sl">Done</div></div><div class="stc"><div class="sv">${t.blocked}</div><div class="sl">Blocked</div></div></div><div id="pi-det-radar" class="radar-wrap"></div>`;
+Object.entries(t.byArea).forEach(([a,v])=>{const ap=Math.round(v.done/v.total*100);h+=`<div class="tc-ar" style="margin-bottom:.3rem"><span class="an">${a}</span><div class="ab-w" style="width:100px"><div class="ab" style="width:${ap}%"></div></div><span class="ap">${ap}%</span></div>`});
+if(goals.length){h+='<h3 style="font-family:var(--f-display);margin:.7rem 0 .3rem;color:var(--bl-deep);font-size:.95rem">Mentor Goals</h3>';goals.forEach(g=>{h+=`<div style="display:flex;gap:.3rem;align-items:center;padding:.25rem 0;border-bottom:1px solid var(--brd-lt);font-size:.82rem"><span class="bdg ${SCLS[g.status]||'bdg-ns'}">${g.status}</span><span style="flex:1">${g.desc}</span></div>`})}
+h+=note?`<div style="background:var(--bl-ghost);border-left:3px solid var(--bl);padding:.5rem .7rem;border-radius:5px;margin-top:.6rem;font-size:.86rem"><strong>Note:</strong> ${note.replace(/\n/g,'<br>')}</div>`:'';
+c.innerHTML=h;const lbs=Object.keys(t.byArea),vls=lbs.map(k=>Math.round(t.byArea[k].done/t.byArea[k].total*100));if(lbs.length>=3)setTimeout(()=>drawR('pi-det-radar',lbs,vls,'#e8723a'),50)});
+function genRef(){const nm=$('ref-who').value;if(!nm){alert('Select trainee.');return}const type=$('ref-type').value,t=piT.find(x=>x.name===nm);if(!t)return;const note=piN[nm]||'',goals=piMG[nm]||[];const str=Object.entries(t.byArea).filter(([,v])=>Math.round(v.done/v.total*100)>=80).map(([k])=>k);const needs=Object.entries(t.byArea).filter(([,v])=>Math.round(v.done/v.total*100)<50).map(([k])=>k);let d='';
+if(type==='recommendation'){d=`${nm} has trained in the Serrano Laboratory at Boston University's Center for Regenerative Medicine at the ${t.level} level. ${nm} has demonstrated ${t.percent>=80?'outstanding':'consistent'} progress, achieving ${t.percent}% completion.${str.length?' Proficient in '+str.slice(0,3).join(', ')+'.':''}${needs.length?' Areas for growth: '+needs.slice(0,2).join(', ')+'.':''}${note?'\n\n'+note:''}${goals.length?'\n\nGoals: '+goals.map(g=>g.desc).join('; ')+'.':''}`}
+else if(type==='training-plan'){d=`Training Plan: ${nm} (${t.level})\nProgress: ${t.percent}% | Goals: ${t.goalCount}\n\nStrengths: ${str.join(', ')||'Developing'}\nGrowth: ${needs.join(', ')||'None identified'}${goals.length?'\n\nMentor Goals:\n'+goals.map((g,i)=>(i+1)+'. '+g.desc+' ['+g.status+']').join('\n'):''}${note?'\n\nNotes: '+note:''}`}
+else if(type==='annual-review'){d=`Review: ${nm}\n\nProgress: ${t.percent}%.${str.length?' Completed: '+str.join(', ')+'.':''}${t.goalCount?' '+t.goalCount+' goals remain.':''}${note?'\n\nComments: '+note:''}${needs.length?'\n\nReinforcement: '+needs.join(', '):''}${goals.length?'\n\nGoals: '+goals.map(g=>g.desc+' ['+g.status+']').join('; '):''}`}
+else{d=`Progress: ${nm} | ${t.level} | ${t.percent}% | Goals: ${t.goalCount}\n\n${Object.entries(t.byArea).map(([k,v])=>k+': '+Math.round(v.done/v.total*100)+'%').join('\n')}${note?'\n\nNotes: '+note:''}`}
+$('ref-txt').value=d;$('ref-out').style.display='block'}
+function piExCSV(){if(!piT.length){alert('No data.');return}const hdr=['Trainee','Level','Area','Skill','Status','Evidence','Reflection','Years','PINote','Goals'];const rows=[hdr];piT.forEach(t=>{const note=piN[t.name]||'';const gs=(piMG[t.name]||[]).map(g=>g.desc).join('; ');t.skills.forEach(s=>{rows.push([t.name,t.level,s.area,s.skill,s.status,s.evidence||'',s.reflection||'',s.yrs.join('|'),note,gs])})});const csv=rows.map(r=>r.map(csvE).join(',')).join('\n');const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`serrano_aggregate_${today()}.csv`;a.click()}
+function piExNotes(){const b=new Blob([JSON.stringify({notes:piN,goals:piMG,actions:piActions},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='serrano_pi_data.json';a.click()}
+function piImNotes(){const inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=e2=>{try{const d=JSON.parse(e2.target.result);if(d.notes)Object.assign(piN,d.notes);if(d.goals)Object.assign(piMG,d.goals);if(d.actions)piActions=d.actions;alert('Imported.');savePIState();renderMGoals();renderActs();if(piT.length)renderPI()}catch(ex){alert('Invalid JSON.')}};r.readAsText(f)};inp.click()}
+function piClear(){if(confirm('Clear all?')){piT=[];piCSV=[];piN={};piMG={};piActions=[];localStorage.removeItem(PI_KEY);$('pi-cards').innerHTML='';$('pi-hm').innerHTML='';$('mg-list').innerHTML='';$('pi-actions').innerHTML='';popSels();['ps-avg','ps-gaps'].forEach(id=>$(id).textContent='—');$('ps-n').textContent='0';$('ps-blocked').textContent='0'}}
+$('pf-lev').addEventListener('change',renderPI);$('pf-area').addEventListener('change',renderPI);
+
+/* ═══ INIT ═══ */
+window.addEventListener('DOMContentLoaded',()=>{
+  const loaded=loadM();if(!loaded)buildMMatrix();
+  renderGoals();renderCerts();renderPubs();renderConfs();renderTeach();renderMtgs();renderMS();renderNet();
+  loadPI();
+});
+</script>
+</body>
+</html>
