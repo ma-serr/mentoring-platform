@@ -167,7 +167,37 @@ body{font-family:var(--f-body);background:var(--surf);color:var(--ink);min-heigh
 .cite-box code{display:block;background:var(--card);border:1px solid var(--brd);border-radius:6px;padding:.55rem .75rem;margin-top:.4rem;font-size:.78rem;line-height:1.7;color:var(--ink);font-family:'SFMono-Regular',Consolas,monospace;white-space:pre-wrap;word-break:break-word}
 .credits{text-align:center;padding:1.8rem 1rem;font-size:.76rem;color:var(--ink-mt);border-top:1px solid var(--brd-lt);margin-top:1.5rem}.credits strong{color:var(--ink-lt)}
 body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{background:#161b22!important}body.hc .portal-nav,body.hc .sec,body.hc .tcard,body.hc .stc,body.hc .modal-bx,body.hc .acc-body,body.hc .ref-b,body.hc .fg input,body.hc .fg select,body.hc .fg textarea,body.hc .dtbl thead th,body.hc .hm th,body.hc .goal-card,body.hc .refl-card,body.hc .pipe-card,body.hc .mtg-card,body.hc .net-card{background:#161b22!important;color:#e6edf3!important;border-color:#30363d!important}body.hc .ptab,body.hc .stab,body.hc .sec-h h2,body.hc .stc .sl,body.hc .tc-n{color:#58a6ff!important}body.hc .btn-p{background:#238636!important}body.hc .tl-table th,body.hc .tl-table td,body.hc .tl-header-input{background:#161b22!important;color:#e6edf3!important;border-color:#30363d!important}
-@media print{.topbar,.portal-nav,.brow,.no-print,.stabs{display:none!important}.pnl,.spnl{display:block!important;padding:0;max-width:100%}.sec{break-inside:avoid;box-shadow:none;border:1px solid #ddd}body{background:#fff;font-size:10pt}}
+@media print{
+  .topbar,.portal-nav,.brow,.no-print,.stabs,.tl-legend,.tl-slider-pop,.tl-x{display:none!important}
+  .pnl,.spnl{display:block!important;padding:0;max-width:100%}
+  .sec{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
+  body{background:#fff;font-size:10pt}
+  /* Timeline-only print mode */
+  body.print-tl .topbar,body.print-tl .portal-nav,body.print-tl .credits,body.print-tl footer{display:none!important}
+  body.print-tl .pnl{display:none!important}
+  body.print-tl #pnl-mentee{display:block!important}
+  body.print-tl #pnl-mentee .stabs,body.print-tl #pnl-mentee .spnl{display:none!important}
+  body.print-tl #m-timeline{display:block!important}
+  body.print-tl #m-timeline .sec{border:none;padding:0;margin:0;box-shadow:none}
+  body.print-tl #m-timeline .sec-h{display:none!important}
+  body.print-tl #m-timeline .brow{display:none!important}
+  body.print-tl #m-timeline .fgrid{display:none!important}
+  body.print-tl #m-timeline .tl-legend{display:flex!important;margin-top:.5rem}
+  body.print-tl .tl-builder{overflow:visible!important;margin:0}
+  body.print-tl .tl-table{min-width:0!important;font-size:9pt}
+  body.print-tl .tl-table th,body.print-tl .tl-table td{padding:.4rem .5rem;white-space:normal}
+  body.print-tl .tl-table td:first-child{white-space:nowrap}
+  body.print-tl .tl-table textarea{border:none!important;padding:0!important;min-height:0!important;font-size:9pt;background:none!important;resize:none!important;overflow:visible!important;height:auto!important}
+  body.print-tl .tl-header-input{border:none!important;padding:0!important;background:none!important;font-size:9pt;text-align:center}
+  body.print-tl .tl-title-row th{padding:.6rem;font-size:12pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-tl .tl-eff-bar-bg{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-tl .tl-eff-bar{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-tl .tl-total td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.print-tl .tl-row-lbl .tl-x{display:none!important}
+  body.print-tl .cite-box{display:block!important;margin-top:1rem;border:1px solid #ccc;page-break-inside:avoid}
+  body.print-tl .tl-print-cite{display:block!important}
+  @page{size:landscape;margin:1.5cm}
+}
 @media(max-width:768px){.topbar{padding:.5rem .8rem}.topbar h1{font-size:.95rem}.pnl{padding:.8rem}.fgrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.tgrid{grid-template-columns:1fr}.ptab{padding:.6rem .9rem;font-size:.82rem}.stab{padding:.45rem .7rem;font-size:.78rem}}
 </style>
 </head>
@@ -352,6 +382,11 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
       <div class="brow" style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--brd-lt)">
         <button class="btn btn-p" onclick="exportTLPrint()">Print Timeline / PDF</button>
         <button class="btn btn-ol" onclick="exportTLText()">Export as Text</button>
+      </div>
+
+      <!-- Print-only citation (hidden on screen) -->
+      <div class="tl-print-cite" style="display:none;margin-top:.8rem;font-size:8pt;color:#666;border-top:1px solid #ddd;padding-top:.5rem;text-align:center">
+        Generated with the Serrano Lab Mentoring &amp; Training Platform · Serrano, M.A. &amp; Claude (Anthropic) · <a href="https://github.com/ma-serr/mentoring-platform">github.com/ma-serr/mentoring-platform</a> · CC BY 4.0
       </div>
     </div>
   </div>
@@ -867,10 +902,20 @@ function resetTLToDefault(){
 }
 
 function exportTLPrint(){
-  // Save current state first
   saveTL();
-  // Open print targeting the timeline
-  window.print();
+  // Auto-expand all textareas to show full content for print
+  document.querySelectorAll('#tl-wrap textarea').forEach(ta=>{
+    ta.style.height='auto';
+    ta.style.height=ta.scrollHeight+'px';
+  });
+  // Add print-tl class to isolate timeline
+  document.body.classList.add('print-tl');
+  // Small delay to let styles apply, then print
+  setTimeout(()=>{
+    window.print();
+    // Remove class after print dialog closes
+    setTimeout(()=>document.body.classList.remove('print-tl'),500);
+  },100);
 }
 
 function exportTLText(){
