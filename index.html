@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════════════════
-   SERRANO LAB MENTORING & TRAINING PLATFORM v2.3
+   SERRANO LAB MENTORING & TRAINING PLATFORM v2.4
    Concept & Content: Dr. Maria A. Serrano
    Implementation & UI/UX: Claude (Anthropic)
    ══════════════════════════════════════════════════════ */
@@ -160,6 +160,11 @@ body{font-family:var(--f-body);background:var(--surf);color:var(--ink);min-heigh
 .tl-legend{display:flex;flex-wrap:wrap;gap:1.2rem;margin-top:1rem;font-size:.78rem;color:var(--ink-mt);align-items:center}
 .tl-legend span{display:flex;align-items:center;gap:.25rem}
 .tl-legend .dot{width:7px;height:7px;border-radius:50%}
+/* Grant Timeline (Gantt) */
+.gt-item{border:1px solid var(--brd);border-radius:var(--r-sm);padding:.6rem .8rem;margin-bottom:.4rem;background:var(--bl-ghost);display:flex;gap:.5rem;flex-wrap:wrap;align-items:end}
+.gt-item .fg{min-width:0}
+.gt-item .gt-color{width:28px;height:28px;border:none;border-radius:6px;cursor:pointer;padding:0;background:none}
+.gt-ms{display:flex;gap:.5rem;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--brd-lt);font-size:.84rem;flex-wrap:wrap}
 .cite-box{max-width:720px;margin:1.5rem auto 0;background:linear-gradient(135deg,#f8fafd,#eef4f8);border:1px solid var(--brd);border-left:4px solid var(--bl);border-radius:var(--r-md);padding:1.1rem 1.4rem}
 .cite-box h4{font-family:var(--f-display);font-size:.92rem;color:var(--bl-deep);margin-bottom:.3rem;display:flex;align-items:center;gap:.4rem}
 .cite-box h4 svg{width:16px;height:16px;stroke:var(--bl-deep);fill:none;stroke-width:1.8;flex-shrink:0}
@@ -175,14 +180,14 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
   /* Timeline-only print mode */
   body.print-tl .topbar,body.print-tl .portal-nav,body.print-tl .credits,body.print-tl footer{display:none!important}
   body.print-tl .pnl{display:none!important}
-  body.print-tl #pnl-mentee{display:block!important}
-  body.print-tl #pnl-mentee .stabs,body.print-tl #pnl-mentee .spnl{display:none!important}
-  body.print-tl #m-timeline{display:block!important}
-  body.print-tl #m-timeline .sec{border:none;padding:0;margin:0;box-shadow:none}
-  body.print-tl #m-timeline .sec-h{display:none!important}
-  body.print-tl #m-timeline .brow{display:none!important}
-  body.print-tl #m-timeline .fgrid{display:none!important}
-  body.print-tl #m-timeline .tl-legend{display:flex!important;margin-top:.5rem}
+  body.print-tl #pnl-grants{display:block!important}
+  body.print-tl #pnl-grants .stabs,body.print-tl #pnl-grants .spnl{display:none!important}
+  body.print-tl #g-career{display:block!important}
+  body.print-tl #g-career .sec{border:none;padding:0;margin:0;box-shadow:none}
+  body.print-tl #g-career .sec-h{display:none!important}
+  body.print-tl #g-career .brow{display:none!important}
+  body.print-tl #g-career .fgrid{display:none!important}
+  body.print-tl #g-career .tl-legend{display:flex!important;margin-top:.5rem}
   body.print-tl .tl-builder{overflow:visible!important;margin:0}
   body.print-tl .tl-table{min-width:0!important;font-size:9pt}
   body.print-tl .tl-table th,body.print-tl .tl-table td{padding:.4rem .5rem;white-space:normal}
@@ -207,11 +212,12 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     <div class="topbar-logo"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6m0 8v6M8 4c0 2 2 4 4 4s4-2 4-4M8 20c0-2 2-4 4-4s4 2 4 4M6 12h4m4 0h4"/><circle cx="12" cy="12" r="2"/></svg></div>
     <h1>Serrano Lab <span>| Mentoring Platform</span></h1>
   </div>
-  <div class="topbar-r"><label><input type="checkbox" id="hc-toggle"> High Contrast</label><span style="opacity:.5">v2.3</span></div>
+  <div class="topbar-r"><label><input type="checkbox" id="hc-toggle"> High Contrast</label><span style="opacity:.5">v2.4</span></div>
 </header>
 <nav class="portal-nav">
   <button class="ptab active" data-portal="mentee"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></svg>Mentee</button>
   <button class="ptab" data-portal="mentor"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Mentor / PI</button>
+  <button class="ptab" data-portal="grants"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>Grant Tools</button>
   <button class="ptab" data-portal="about"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>About</button>
 </nav>
 
@@ -223,7 +229,6 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     <button class="stab" data-msub="m-record">Professional Record</button>
     <button class="stab" data-msub="m-meetings">Meeting Log</button>
     <button class="stab" data-msub="m-network">Networking</button>
-    <button class="stab" data-msub="m-timeline">Career Timeline</button>
     <button class="stab" data-msub="m-export">Export</button>
   </div>
 
@@ -340,57 +345,6 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     </div>
   </div>
 
-  <!-- ── CAREER TIMELINE ── -->
-  <div class="spnl" id="m-timeline">
-    <div class="sec">
-      <div class="sec-h">
-        <div class="ico pp"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>
-        <div><h2>Career Timeline Builder</h2><div class="sub">Build a customizable training timeline for F-series fellowships, DAC presentations, and grant applications</div></div>
-      </div>
-
-      <!-- Setup -->
-      <div class="fgrid" style="margin-bottom:1rem">
-        <div class="fg"><label>Timeline Title</label><input type="text" id="tl-title" placeholder="e.g. F30 MD/PhD Fellowship | Sandeep Sreerama" onchange="renderTL();dsTL()"></div>
-        <div class="fg"><label>Number of Year Columns</label>
-          <select id="tl-ncols" onchange="adjustTLCols();renderTL();dsTL()">
-            <option value="3">3 Years</option>
-            <option value="4" selected>4 Years</option>
-            <option value="5">5 Years</option>
-            <option value="6">6 Years</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Timeline Table -->
-      <div class="tl-builder" id="tl-wrap"></div>
-
-      <!-- Legend -->
-      <div class="tl-legend">
-        <span><span class="dot" style="background:var(--bl)"></span> Research effort</span>
-        <span><span class="dot" style="background:var(--teal)"></span> Clinical effort</span>
-        <span><span class="dot" style="background:var(--or)"></span> Activities / Other</span>
-        <span style="margin-left:auto;font-style:italic">Tip: Edit column headers, row labels, and cell content directly in the table</span>
-      </div>
-
-      <!-- Row management -->
-      <div class="brow">
-        <button class="btn btn-pp btn-sm" onclick="addTLRow()">+ Add Row</button>
-        <button class="btn btn-ol btn-sm" onclick="resetTLToDefault()">Reset to Template</button>
-      </div>
-
-      <!-- Export -->
-      <div class="brow" style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--brd-lt)">
-        <button class="btn btn-p" onclick="exportTLPrint()">Preview &amp; Print Timeline</button>
-        <button class="btn btn-ol" onclick="exportTLText()">Export as Text</button>
-      </div>
-
-      <!-- Print-only citation (hidden on screen) -->
-      <div class="tl-print-cite" style="display:none;margin-top:.8rem;font-size:8pt;color:#666;border-top:1px solid #ddd;padding-top:.5rem;text-align:center">
-        Generated with the Serrano Lab Mentoring &amp; Training Platform · Serrano, M.A. &amp; Claude (Anthropic) · <a href="https://github.com/ma-serr/mentoring-platform">github.com/ma-serr/mentoring-platform</a> · CC BY 4.0
-      </div>
-    </div>
-  </div>
-
   <!-- ── EXPORT ── -->
   <div class="spnl" id="m-export">
     <div class="sec">
@@ -402,7 +356,6 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
         <button class="btn btn-o" onclick="sendProgress()">Send to Mentor</button>
         <button class="btn btn-ol" onclick="exportIDP()">Full IDP Summary</button>
         <button class="btn btn-pp" onclick="exportCV()">CV Components Export</button>
-        <button class="btn btn-ol" onclick="exportTLText()">Career Timeline Export</button>
       </div>
     </div>
   </div>
@@ -458,6 +411,172 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
   </div>
 </div>
 
+<!-- ════════ GRANT TOOLS PORTAL ════════ -->
+<div class="pnl" id="pnl-grants">
+  <div class="stabs">
+    <button class="stab active" data-sub="g-gantt">Grant Timeline</button>
+    <button class="stab" data-sub="g-career">Career Timeline</button>
+    <button class="stab" data-sub="g-aims">Specific Aims Outliner</button>
+    <button class="stab" data-sub="g-deadlines">Deadline Tracker</button>
+  </div>
+
+  <!-- ── GRANT TIMELINE (Gantt) ── -->
+  <div class="spnl active" id="g-gantt">
+    <div class="sec">
+      <div class="sec-h">
+        <div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="8" width="8" height="3" rx="1"/><rect x="9" y="13" width="10" height="3" rx="1"/><rect x="5" y="18" width="6" height="3" rx="1"/></svg></div>
+        <div><h2>Grant Timeline Figure</h2><div class="sub">Build Gantt-style aim/task timelines for F31/F32, R01/R21, and training grants — exports as SVG for grant figures</div></div>
+      </div>
+      <div class="fgrid" style="margin-bottom:.8rem">
+        <div class="fg"><label>Project Title</label><input type="text" id="gt-title" placeholder="e.g. KMT2D Controls Conserved Chromatin Timing" onchange="renderGantt();dsG()"></div>
+        <div class="fg"><label>Grant Mechanism</label>
+          <select id="gt-mech" onchange="renderGantt();dsG()"><option value="R01">R01 (5 years)</option><option value="R21">R21 (2 years)</option><option value="F31">F31 (3–4 years)</option><option value="F32">F32 (2–3 years)</option><option value="custom">Custom</option></select></div>
+        <div class="fg"><label>Start Year</label><input type="number" id="gt-start" value="2026" min="2020" max="2035" onchange="renderGantt();dsG()"></div>
+        <div class="fg"><label>Total Years</label>
+          <select id="gt-years" onchange="renderGantt();dsG()"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option></select></div>
+      </div>
+      <div style="margin-bottom:.6rem">
+        <div style="font-size:.82rem;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">Aims & Tasks</div>
+        <div id="gt-items"></div>
+        <div class="brow"><button class="btn btn-p btn-sm" onclick="addGanttItem('aim')">+ Add Aim</button><button class="btn btn-ol btn-sm" onclick="addGanttItem('task')">+ Add Sub-task</button></div>
+      </div>
+      <div style="margin-bottom:.6rem">
+        <div style="font-size:.82rem;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">Milestones & Decision Points</div>
+        <div id="gt-milestones"></div>
+        <div class="brow"><button class="btn btn-ol btn-sm" onclick="addGanttMS()">+ Add Milestone</button></div>
+      </div>
+      <div style="border-top:1px solid var(--brd-lt);padding-top:1rem;margin-top:.8rem">
+        <div style="font-size:.82rem;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.6rem">Preview</div>
+        <div id="gt-svg" style="overflow-x:auto;background:#fff;border:1px solid var(--brd);border-radius:var(--r-sm);padding:1rem"></div>
+      </div>
+      <div class="brow" style="margin-top:.8rem"><button class="btn btn-p" onclick="exportGanttSVG()">Download SVG</button><button class="btn btn-ol" onclick="exportGanttPrint()">Preview & Print</button><button class="btn btn-ol" onclick="resetGantt()">Reset</button></div>
+    </div>
+  </div>
+
+  <!-- ── CAREER TIMELINE ── -->
+  <div class="spnl" id="g-career">
+    <div class="sec">
+      <div class="sec-h">
+        <div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>
+        <div><h2>Career Timeline Builder</h2><div class="sub">Effort allocation table for F-series fellowships, DAC presentations, and training grants</div></div>
+      </div>
+      <div class="fgrid" style="margin-bottom:1rem">
+        <div class="fg"><label>Timeline Title</label><input type="text" id="tl-title" placeholder="e.g. F30 MD/PhD Fellowship | Sandeep Sreerama" onchange="renderTL();dsTL()"></div>
+        <div class="fg"><label>Year Columns</label>
+          <select id="tl-ncols" onchange="adjustTLCols();renderTL();dsTL()"><option value="3">3 Years</option><option value="4" selected>4 Years</option><option value="5">5 Years</option><option value="6">6 Years</option></select></div>
+      </div>
+      <div class="tl-builder" id="tl-wrap"></div>
+      <div class="tl-legend">
+        <span><span class="dot" style="background:var(--bl)"></span> Research effort</span>
+        <span><span class="dot" style="background:var(--teal)"></span> Clinical effort</span>
+        <span><span class="dot" style="background:var(--or)"></span> Activities / Other</span>
+        <span style="margin-left:auto;font-style:italic">Tip: Edit headers, labels, and cells directly</span>
+      </div>
+      <div class="brow"><button class="btn btn-p btn-sm" onclick="addTLRow()">+ Add Row</button><button class="btn btn-ol btn-sm" onclick="resetTLToDefault()">Reset to Template</button></div>
+      <div class="brow" style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--brd-lt)">
+        <button class="btn btn-p" onclick="exportTLPrint()">Preview &amp; Print</button><button class="btn btn-ol" onclick="exportTLText()">Export as Text</button></div>
+      <div class="tl-print-cite" style="display:none;margin-top:.8rem;font-size:8pt;color:#666;border-top:1px solid #ddd;padding-top:.5rem;text-align:center">Generated with the Serrano Lab Mentoring &amp; Training Platform · Serrano, M.A. &amp; Claude (Anthropic) · <a href="https://github.com/ma-serr/mentoring-platform">github.com/ma-serr/mentoring-platform</a> · CC BY 4.0</div>
+    </div>
+  </div>
+
+  <!-- ── SPECIFIC AIMS OUTLINER ── -->
+  <div class="spnl" id="g-aims">
+    <div class="sec">
+      <div class="sec-h">
+        <div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <div><h2>Specific Aims Page Outliner</h2><div class="sub">Structure the most critical page in any NIH grant — with section guidance and word counts</div></div>
+      </div>
+      <div class="fgrid" style="margin-bottom:1rem">
+        <div class="fg" style="grid-column:1/-1"><label>Grant Title</label><input type="text" id="sa-title" placeholder="e.g. KMT2D Controls a Conserved Chromatin Timing Program" onchange="dsSA()"></div>
+        <div class="fg"><label>Mechanism</label><input type="text" id="sa-mech" placeholder="e.g. R01, F31" onchange="dsSA()"></div>
+        <div class="fg"><label>PI / Fellow</label><input type="text" id="sa-pi" placeholder="e.g. Maria A. Serrano, PhD" onchange="dsSA()"></div>
+      </div>
+
+      <div style="font-size:.78rem;color:var(--ink-mt);margin-bottom:.6rem;text-align:right">Target: ~500 words total (1 page). Current: <strong id="sa-wc-total">0</strong> words</div>
+
+      <div style="margin-bottom:.8rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+          <label style="font-size:.82rem;font-weight:600;color:var(--bl-deep)">Opening Paragraph</label>
+          <span style="font-size:.75rem;color:var(--ink-mt)"><span id="sa-wc-1">0</span> words · ~75–100 recommended</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--ink-mt);font-style:italic;margin-bottom:.3rem">Establish the field and its importance. What is the broad problem? Why does it matter?</div>
+        <textarea id="sa-s1" rows="4" onkeyup="updateSAWC()" onchange="dsSA()" placeholder="The long-term goal of this research program is to..." style="width:100%;font-family:var(--f-body);font-size:.9rem;padding:.5rem;border:1.5px solid var(--brd);border-radius:6px;line-height:1.6;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:.8rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+          <label style="font-size:.82rem;font-weight:600;color:var(--bl-deep)">Knowledge Gap & Critical Need</label>
+          <span style="font-size:.75rem;color:var(--ink-mt)"><span id="sa-wc-2">0</span> words · ~75–100 recommended</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--ink-mt);font-style:italic;margin-bottom:.3rem">What is not known? What barrier does this create? Why is it a problem right now?</div>
+        <textarea id="sa-s2" rows="4" onkeyup="updateSAWC()" onchange="dsSA()" placeholder="However, the mechanisms by which... remain poorly understood. This gap in knowledge..." style="width:100%;font-family:var(--f-body);font-size:.9rem;padding:.5rem;border:1.5px solid var(--brd);border-radius:6px;line-height:1.6;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:.8rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+          <label style="font-size:.82rem;font-weight:600;color:var(--bl-deep)">Central Hypothesis & Rationale</label>
+          <span style="font-size:.75rem;color:var(--ink-mt)"><span id="sa-wc-3">0</span> words · ~50–75 recommended</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--ink-mt);font-style:italic;margin-bottom:.3rem">State your hypothesis clearly. What preliminary data supports it?</div>
+        <textarea id="sa-s3" rows="3" onkeyup="updateSAWC()" onchange="dsSA()" placeholder="Our central hypothesis is that... This hypothesis is based on..." style="width:100%;font-family:var(--f-body);font-size:.9rem;padding:.5rem;border:1.5px solid var(--brd);border-radius:6px;line-height:1.6;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:.8rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+          <label style="font-size:.82rem;font-weight:600;color:var(--bl-deep)">Specific Aims</label>
+          <span style="font-size:.75rem;color:var(--ink-mt)"><span id="sa-wc-4">0</span> words · ~150–200 recommended</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--ink-mt);font-style:italic;margin-bottom:.3rem">List each aim with a brief description of approach and expected outcome. Typically 2–3 aims.</div>
+        <textarea id="sa-s4" rows="6" onkeyup="updateSAWC()" onchange="dsSA()" placeholder="Aim 1: Determine whether...&#10;Aim 2: Establish the role of...&#10;Aim 3: Test the hypothesis that..." style="width:100%;font-family:var(--f-body);font-size:.9rem;padding:.5rem;border:1.5px solid var(--brd);border-radius:6px;line-height:1.6;resize:vertical"></textarea>
+      </div>
+
+      <div style="margin-bottom:.8rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem">
+          <label style="font-size:.82rem;font-weight:600;color:var(--bl-deep)">Impact & Innovation</label>
+          <span style="font-size:.75rem;color:var(--ink-mt)"><span id="sa-wc-5">0</span> words · ~50–75 recommended</span>
+        </div>
+        <div style="font-size:.78rem;color:var(--ink-mt);font-style:italic;margin-bottom:.3rem">How will this work move the field forward? What makes it innovative? What is the expected payoff?</div>
+        <textarea id="sa-s5" rows="3" onkeyup="updateSAWC()" onchange="dsSA()" placeholder="The proposed research is innovative because... Upon completion, these studies will..." style="width:100%;font-family:var(--f-body);font-size:.9rem;padding:.5rem;border:1.5px solid var(--brd);border-radius:6px;line-height:1.6;resize:vertical"></textarea>
+      </div>
+
+      <div class="brow">
+        <button class="btn btn-p" onclick="exportSA()">Export as Text</button>
+        <button class="btn btn-ol" onclick="copySA()">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DEADLINE TRACKER ── -->
+  <div class="spnl" id="g-deadlines">
+    <div class="sec">
+      <div class="sec-h">
+        <div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div><h2>Grant Deadline Tracker</h2><div class="sub">Track NIH standard receipt dates and foundation deadlines — never miss a submission window</div></div>
+      </div>
+
+      <div style="font-size:.82rem;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">NIH Standard Receipt Dates (2026)</div>
+      <div style="overflow-x:auto;margin-bottom:1.2rem">
+        <table class="dtbl" style="max-width:700px">
+          <thead><tr><th>Mechanism</th><th>Cycle 1</th><th>Cycle 2</th><th>Cycle 3</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>R01 (New)</td><td>Feb 5</td><td>Jun 5</td><td>Oct 5</td><td>New</td></tr>
+            <tr><td>R01 (Resubmission)</td><td>Mar 5</td><td>Jul 5</td><td>Nov 5</td><td>Resub</td></tr>
+            <tr><td>R21 (New)</td><td>Feb 16</td><td>Jun 16</td><td>Oct 16</td><td>New</td></tr>
+            <tr><td>R21 (Resubmission)</td><td>Mar 16</td><td>Jul 16</td><td>Nov 16</td><td>Resub</td></tr>
+            <tr><td>F31/F32 (New)</td><td>Apr 8</td><td>Aug 8</td><td>Dec 8</td><td>Fellowship</td></tr>
+            <tr><td>F31/F32 (Resubmission)</td><td>May 8</td><td>Sep 8</td><td>Jan 8</td><td>Fellowship</td></tr>
+            <tr><td>K08/K23/K99</td><td>Feb 12</td><td>Jun 12</td><td>Oct 12</td><td>Career Dev</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="font-size:.82rem;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem">Your Active Deadlines</div>
+      <div id="dl-list"></div>
+      <div class="brow"><button class="btn btn-p btn-sm" onclick="addDeadline()">+ Add Deadline</button></div>
+    </div>
+  </div>
+</div>
+
 <!-- ════════ ABOUT ════════ -->
 <div class="pnl" id="pnl-about">
   <div class="sec"><div class="sec-h"><div class="ico bl"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div><h2>About This Platform</h2></div>
@@ -465,10 +584,10 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
     <h3 style="font-family:var(--f-display);margin:1.2rem 0 .4rem;color:var(--bl-deep)">Contributions & Credits</h3>
     <table class="dtbl" style="max-width:680px"><thead><tr><th>Contributor</th><th>Role</th><th>Contributions</th></tr></thead><tbody>
       <tr><td><strong>Dr. Maria A. Serrano</strong></td><td>Creator & Content</td><td>Conceptual design, training framework (7 domains, 50+ skills), competency taxonomy, mentoring pedagogy, IDP/NIH/DAC alignment, reflection prompts, all domain content, pedagogical direction</td></tr>
-      <tr><td><strong>Claude (Anthropic)</strong></td><td>Development Partner</td><td>UI/UX design, front-end code, data architecture, CSV pipeline, radar charts, reference builder, localStorage persistence, networking tracker, publication pipeline, meeting log, milestone scheduler, v2.3 professional record system</td></tr>
+      <tr><td><strong>Claude (Anthropic)</strong></td><td>Development Partner</td><td>UI/UX design, front-end code, data architecture, CSV pipeline, radar charts, reference builder, localStorage persistence, networking tracker, publication pipeline, meeting log, milestone scheduler, grant timeline SVG generator, specific aims outliner, deadline tracker, career timeline builder</td></tr>
     </tbody></table>
     <h3 style="font-family:var(--f-display);margin:1.2rem 0 .4rem;color:var(--bl-deep)">Version History</h3>
-    <p style="line-height:1.8;max-width:680px;font-size:.9rem"><strong>v1.0</strong> — Separate Mentee Matrix & PI Dashboard.<br><strong>v2.0</strong> — Unified platform, IDP builder, SMART goals, reference builder.<br><strong>v2.1</strong> — Pedagogical redesign, mentoring reflection, radar charts, drag-drop goals, cert uploads.<br><strong>v2.3</strong> — Sub-tab navigation, DAC milestone scheduler, publication pipeline, conference log, 1:1 meeting log with rolling action items, networking tracker, teaching hours, CV components export, career timeline builder.</p>
+    <p style="line-height:1.8;max-width:680px;font-size:.9rem"><strong>v1.0</strong> — Separate Mentee Matrix & PI Dashboard.<br><strong>v2.0</strong> — Unified platform, IDP builder, SMART goals, reference builder.<br><strong>v2.1</strong> — Pedagogical redesign, mentoring reflection, radar charts, drag-drop goals, cert uploads.<br><strong>v2.2–2.3</strong> — Sub-tab navigation, DAC scheduler, publication pipeline, conference log, 1:1 meeting log, networking tracker, teaching hours, career timeline builder, grant timeline figure builder.<br><strong>v2.4</strong> — Dedicated Grant Tools portal with Gantt-style timeline, career timeline, specific aims page outliner with section guidance and word counts, and NIH deadline tracker with countdown.</p>
 
     <div class="cite-box">
       <h4><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> If you use or adapt this tool, please cite</h4>
@@ -482,7 +601,7 @@ https://github.com/ma-serr/mentoring-platform</code>
 
 <div class="modal-ov" id="modal-ov"><div class="modal-bx" id="modal-bx"></div></div>
 <form id="matrixForm" action="https://formspree.io/f/xkgbpjoz" method="POST" style="display:none"><input type="email" name="email" id="fEmail"><textarea name="matrixCSV" id="fCSV"></textarea></form>
-<footer class="credits"><strong>Serrano Lab Mentoring & Training Platform v2.3</strong><br>Concept & Content: Dr. Maria A. Serrano · Implementation: Claude (Anthropic)<br>Boston University · Chobanian & Avedisian School of Medicine · Center for Regenerative Medicine</footer>
+<footer class="credits"><strong>Serrano Lab Mentoring & Training Platform v2.4</strong><br>Concept & Content: Dr. Maria A. Serrano · Implementation: Claude (Anthropic)<br>Boston University · Chobanian & Avedisian School of Medicine · Center for Regenerative Medicine</footer>
 
 <script>
 /* ═══════════════════════════════════════════════════════════
@@ -1036,11 +1155,283 @@ function exportTLText(){
   dlText(t,`career_timeline_${today()}.txt`);
 }
 
+/* ═══════════════════════════════════════
+   GRANT TIMELINE (Gantt) BUILDER
+   ═══════════════════════════════════════ */
+const GT_KEY='serrano_gantt_v1';
+const GT_COLORS=['#1a4f7a','#2a9d8f','#e8723a','#7c3aed','#52b788','#e76f51','#2176ae'];
+let gtData=null;
+
+function defaultGT(){
+  return{
+    title:'',mech:'R01',startYr:2026,nYears:5,
+    items:[
+      {type:'aim',label:'Aim 1',startQ:0,endQ:7,color:GT_COLORS[0]},
+      {type:'task',label:'Aim 1a: Sub-experiment',startQ:0,endQ:3,color:GT_COLORS[0]},
+      {type:'task',label:'Aim 1b: Analysis',startQ:3,endQ:7,color:GT_COLORS[0]},
+      {type:'aim',label:'Aim 2',startQ:2,endQ:11,color:GT_COLORS[1]},
+      {type:'aim',label:'Aim 3',startQ:6,endQ:19,color:GT_COLORS[2]},
+    ],
+    milestones:[
+      {label:'R01 Submission',q:0},
+      {label:'Manuscript 1',q:8},
+      {label:'Decision Point',q:12},
+    ]
+  };
+}
+
+function loadGT(){
+  try{const s=JSON.parse(localStorage.getItem(GT_KEY));if(s){gtData=s;$('gt-title').value=s.title||'';$('gt-mech').value=s.mech||'R01';$('gt-start').value=s.startYr||2026;$('gt-years').value=String(s.nYears||5);return}}catch(e){}
+  gtData=defaultGT();
+}
+let gtTimer;function dsG(){clearTimeout(gtTimer);gtTimer=setTimeout(saveGT,500)}
+function saveGT(){if(!gtData)return;gtData.title=$('gt-title').value;gtData.mech=$('gt-mech').value;gtData.startYr=parseInt($('gt-start').value)||2026;gtData.nYears=parseInt($('gt-years').value)||5;try{localStorage.setItem(GT_KEY,JSON.stringify(gtData))}catch(e){}}
+
+// Mechanism presets
+$('gt-mech').addEventListener('change',function(){
+  const m=this.value;
+  if(m==='R01')$('gt-years').value='5';
+  else if(m==='R21')$('gt-years').value='2';
+  else if(m==='F31')$('gt-years').value='4';
+  else if(m==='F32')$('gt-years').value='3';
+  renderGantt();dsG();
+});
+
+function addGanttItem(type){
+  if(!gtData)return;
+  const nQ=gtData.nYears*4;
+  const colorIdx=gtData.items.filter(x=>x.type==='aim').length % GT_COLORS.length;
+  gtData.items.push({type,label:type==='aim'?'New Aim':'Sub-task',startQ:0,endQ:Math.min(7,nQ-1),color:type==='aim'?GT_COLORS[colorIdx]:GT_COLORS[colorIdx]});
+  renderGanttItems();renderGantt();dsG();
+}
+
+function addGanttMS(){
+  if(!gtData)return;
+  gtData.milestones.push({label:'Milestone',q:0});
+  renderGanttMS();renderGantt();dsG();
+}
+
+function renderGanttItems(){
+  const c=$('gt-items');if(!gtData){c.innerHTML='';return}
+  const nQ=gtData.nYears*4;
+  c.innerHTML=gtData.items.map((it,i)=>`
+    <div class="gt-item">
+      <div class="fg" style="width:60px"><label>Type</label>
+        <select onchange="gtData.items[${i}].type=this.value;renderGantt();dsG()" style="font-size:.8rem;padding:.2rem">${['aim','task'].map(t=>'<option'+(t===it.type?' selected':'')+'>'+t+'</option>').join('')}</select></div>
+      <div class="fg" style="flex:2;min-width:140px"><label>Label</label>
+        <input type="text" value="${esc(it.label)}" onchange="gtData.items[${i}].label=this.value;renderGantt();dsG()"></div>
+      <div class="fg" style="width:75px"><label>Start Q</label>
+        <select onchange="gtData.items[${i}].startQ=+this.value;renderGantt();dsG()">${Array.from({length:nQ},(_,q)=>'<option value="'+q+'"'+(q===it.startQ?' selected':'')+'>Y'+(Math.floor(q/4)+1)+' Q'+(q%4+1)+'</option>').join('')}</select></div>
+      <div class="fg" style="width:75px"><label>End Q</label>
+        <select onchange="gtData.items[${i}].endQ=+this.value;renderGantt();dsG()">${Array.from({length:nQ},(_,q)=>'<option value="'+q+'"'+(q===it.endQ?' selected':'')+'>Y'+(Math.floor(q/4)+1)+' Q'+(q%4+1)+'</option>').join('')}</select></div>
+      <div class="fg" style="width:36px"><label>Color</label>
+        <input type="color" class="gt-color" value="${it.color}" onchange="gtData.items[${i}].color=this.value;renderGantt();dsG()"></div>
+      <button class="btn btn-gh btn-sm" onclick="gtData.items.splice(${i},1);renderGanttItems();renderGantt();dsG()">Remove</button>
+    </div>`).join('');
+}
+
+function renderGanttMS(){
+  const c=$('gt-milestones');if(!gtData){c.innerHTML='';return}
+  const nQ=gtData.nYears*4;
+  c.innerHTML=gtData.milestones.map((m,i)=>`
+    <div class="gt-ms">
+      <input type="text" value="${esc(m.label)}" onchange="gtData.milestones[${i}].label=this.value;renderGantt();dsG()" placeholder="Milestone name" style="flex:2;font-size:.84rem;padding:.25rem .4rem;border:1px solid var(--brd);border-radius:5px">
+      <select onchange="gtData.milestones[${i}].q=+this.value;renderGantt();dsG()" style="font-size:.82rem;padding:.25rem .4rem;border:1px solid var(--brd);border-radius:5px">${Array.from({length:nQ},(_,q)=>'<option value="'+q+'"'+(q===m.q?' selected':'')+'>Y'+(Math.floor(q/4)+1)+' Q'+(q%4+1)+'</option>').join('')}</select>
+      <button class="btn btn-gh btn-sm" onclick="gtData.milestones.splice(${i},1);renderGanttMS();renderGantt();dsG()">Remove</button>
+    </div>`).join('');
+}
+
+function buildGanttSVG(){
+  if(!gtData)return '';
+  const nQ=gtData.nYears*4;
+  const LM=155,RM=14,TM=52,BM=38;
+  const QW=36,RH=24;
+  const nRows=gtData.items.length;
+  const W=LM+nQ*QW+RM;
+  const chartH=nRows*RH;
+  const msH=gtData.milestones.length?26:0;
+  const H=TM+chartH+msH+BM;
+  const startYr=gtData.startYr;
+
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="'Source Sans 3','Source Sans Pro',system-ui,sans-serif">`;
+  s+=`<rect width="${W}" height="${H}" fill="#fff"/>`;
+
+  // Title
+  if(gtData.title){
+    s+=`<text x="${W/2}" y="18" text-anchor="middle" font-size="12" font-weight="700" fill="#1a2332" font-family="'Bitter',Georgia,serif">${gtData.title}</text>`;
+    if(gtData.mech)s+=`<text x="${W/2}" y="31" text-anchor="middle" font-size="8.5" fill="#8a97a8">${gtData.mech} Timeline</text>`;
+  }
+
+  // Year headers
+  for(let y=0;y<gtData.nYears;y++){
+    const x=LM+y*4*QW;const w=4*QW;
+    s+=`<rect x="${x}" y="${TM-20}" width="${w}" height="14" fill="#1a4f7a" rx="2"/>`;
+    s+=`<text x="${x+w/2}" y="${TM-10.5}" text-anchor="middle" font-size="7.5" font-weight="600" fill="#fff">Year ${y+1} (${startYr+y}\u2013${startYr+y+1})</text>`;
+  }
+
+  // Quarter sub-headers
+  for(let q=0;q<nQ;q++){
+    const x=LM+q*QW;
+    s+=`<rect x="${x}" y="${TM-6}" width="${QW}" height="10" fill="${q%2===0?'#eef4f8':'#f8fafd'}" stroke="#d8e0e8" stroke-width="0.4"/>`;
+    s+=`<text x="${x+QW/2}" y="${TM+1.5}" text-anchor="middle" font-size="6.5" fill="#a0aab4">Q${q%4+1}</text>`;
+  }
+
+  // Grid lines
+  for(let q=0;q<=nQ;q++){
+    const x=LM+q*QW;const isYr=q%4===0;
+    s+=`<line x1="${x}" y1="${TM+4}" x2="${x}" y2="${TM+4+chartH}" stroke="${isYr?'#c8d0d8':'#eaeff4'}" stroke-width="${isYr?0.6:0.3}" ${isYr?'':'stroke-dasharray="1.5,2.5"'}/>`;
+  }
+  s+=`<line x1="${LM}" y1="${TM-20}" x2="${LM}" y2="${TM+4+chartH}" stroke="#c8d0d8" stroke-width="0.5"/>`;
+
+  // Row backgrounds
+  for(let r=0;r<nRows;r++){
+    const y=TM+4+r*RH;
+    if(r%2===1)s+=`<rect x="0" y="${y}" width="${W}" height="${RH}" fill="#fafcfe"/>`;
+    s+=`<line x1="0" y1="${y+RH}" x2="${W}" y2="${y+RH}" stroke="#f0f3f6" stroke-width="0.3"/>`;
+  }
+
+  // Bars
+  gtData.items.forEach((it,i)=>{
+    const y=TM+4+i*RH;
+    const x1=LM+it.startQ*QW;
+    const bw=(it.endQ-it.startQ+1)*QW;
+    const isAim=it.type==='aim';
+    const bh=isAim?10:6;
+    const by=y+(RH-bh)/2;
+    const indent=isAim?0:10;
+    s+=`<text x="${isAim?6:16}" y="${y+RH/2+0.5}" font-size="${isAim?'8.5':'7.5'}" font-weight="${isAim?'700':'500'}" fill="${isAim?'#1a2332':'#6a7a8a'}" dominant-baseline="middle">${it.label}</text>`;
+    s+=`<rect x="${x1+indent}" y="${by}" width="${Math.max(bw-indent,4)}" height="${bh}" rx="${bh/2}" fill="${it.color}" opacity="${isAim?'0.82':'0.55'}"/>`;
+  });
+
+  // Milestones
+  if(gtData.milestones.length){
+    const msY=TM+4+chartH+8;
+    s+=`<line x1="${LM}" y1="${msY}" x2="${LM+nQ*QW}" y2="${msY}" stroke="#e8ecf0" stroke-width="0.3"/>`;
+    gtData.milestones.forEach(m=>{
+      const x=LM+(m.q+0.5)*QW;
+      const dy=TM+4+chartH-1;
+      s+=`<polygon points="${x},${dy-4} ${x+3.5},${dy} ${x},${dy+4} ${x-3.5},${dy}" fill="#e76f51" stroke="#fff" stroke-width="0.7"/>`;
+      s+=`<text x="${x}" y="${msY+10}" text-anchor="middle" font-size="6.5" fill="#4a5c72" font-weight="500">${m.label}</text>`;
+      s+=`<line x1="${x}" y1="${dy+4}" x2="${x}" y2="${msY}" stroke="#e76f51" stroke-width="0.4" stroke-dasharray="1.5,2" opacity="0.3"/>`;
+    });
+  }
+
+  s+=`<text x="${W/2}" y="${H-5}" text-anchor="middle" font-size="5.5" fill="#c0c8d0">Serrano Lab Mentoring Platform \u00B7 github.com/ma-serr/mentoring-platform \u00B7 CC BY 4.0</text>`;
+  s+=`</svg>`;
+  return s;
+}
+
+function renderGantt(){
+  saveGT();
+  const svg=buildGanttSVG();
+  $('gt-svg').innerHTML=svg;
+}
+
+function exportGanttSVG(){
+  saveGT();
+  const svg=buildGanttSVG();
+  const blob=new Blob([svg],{type:'image/svg+xml'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`grant_timeline_${(gtData.mech||'').toLowerCase()}_${today()}.svg`;
+  a.click();
+}
+
+function exportGanttPrint(){
+  saveGT();
+  const svg=buildGanttSVG();
+  const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grant Timeline</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff;padding:1rem}
+svg{max-width:100%;height:auto}
+.actions{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.5rem}
+.actions button{font-family:system-ui;font-size:10pt;font-weight:600;padding:6px 18px;border-radius:6px;cursor:pointer;border:none;background:#1a4f7a;color:#fff}
+@page{size:landscape;margin:1cm}
+@media print{.actions{display:none!important}}</style></head>
+<body>${svg}<div class="actions"><button onclick="window.print()">Print / Save as PDF</button></div></body></html>`;
+  const win=window.open('','_blank','width=1100,height=600');
+  win.document.write(h);win.document.close();
+}
+
+function resetGantt(){
+  if(!confirm('Reset grant timeline to default template?'))return;
+  gtData=defaultGT();$('gt-title').value='';$('gt-mech').value='R01';$('gt-start').value='2026';$('gt-years').value='5';
+  renderGanttItems();renderGanttMS();renderGantt();dsG();
+}
+
+/* ═══════════════════════════════════════
+   SPECIFIC AIMS OUTLINER
+   ═══════════════════════════════════════ */
+const SA_KEY='serrano_aims_v1';
+function wc(s){return (s||'').trim().split(/\s+/).filter(Boolean).length}
+function updateSAWC(){
+  for(let i=1;i<=5;i++){$(`sa-wc-${i}`).textContent=wc($(`sa-s${i}`).value)}
+  $('sa-wc-total').textContent=wc($('sa-s1').value)+wc($('sa-s2').value)+wc($('sa-s3').value)+wc($('sa-s4').value)+wc($('sa-s5').value);
+}
+let saTimer;function dsSA(){clearTimeout(saTimer);saTimer=setTimeout(saveSA,500);updateSAWC()}
+function saveSA(){try{localStorage.setItem(SA_KEY,JSON.stringify({title:$('sa-title').value,mech:$('sa-mech').value,pi:$('sa-pi').value,s1:$('sa-s1').value,s2:$('sa-s2').value,s3:$('sa-s3').value,s4:$('sa-s4').value,s5:$('sa-s5').value}))}catch(e){}}
+function loadSA(){try{const s=JSON.parse(localStorage.getItem(SA_KEY));if(!s)return;$('sa-title').value=s.title||'';$('sa-mech').value=s.mech||'';$('sa-pi').value=s.pi||'';$('sa-s1').value=s.s1||'';$('sa-s2').value=s.s2||'';$('sa-s3').value=s.s3||'';$('sa-s4').value=s.s4||'';$('sa-s5').value=s.s5||'';updateSAWC()}catch(e){}}
+function exportSA(){
+  const t=$('sa-title').value||'Specific Aims';const m=$('sa-mech').value;const pi=$('sa-pi').value;
+  let out=`SPECIFIC AIMS\n${m?m+' — ':''}${t}\n${pi?'PI: '+pi+'\n':''}${'═'.repeat(60)}\n\n`;
+  out+=$('sa-s1').value+'\n\n';
+  out+=$('sa-s2').value+'\n\n';
+  out+=$('sa-s3').value+'\n\n';
+  out+=$('sa-s4').value+'\n\n';
+  out+=$('sa-s5').value+'\n\n';
+  out+=`${'─'.repeat(60)}\nWord count: ${wc($('sa-s1').value)+wc($('sa-s2').value)+wc($('sa-s3').value)+wc($('sa-s4').value)+wc($('sa-s5').value)}\n`;
+  dlText(out,`specific_aims_${today()}.txt`);
+}
+function copySA(){
+  const out=[$('sa-s1').value,$('sa-s2').value,$('sa-s3').value,$('sa-s4').value,$('sa-s5').value].filter(Boolean).join('\n\n');
+  navigator.clipboard.writeText(out).then(()=>alert('Copied to clipboard!'));
+}
+
+/* ═══════════════════════════════════════
+   DEADLINE TRACKER
+   ═══════════════════════════════════════ */
+const DL_KEY='serrano_deadlines_v1';
+let dlData=[];
+function loadDL(){try{dlData=JSON.parse(localStorage.getItem(DL_KEY))||[]}catch(e){dlData=[]}}
+function saveDL(){try{localStorage.setItem(DL_KEY,JSON.stringify(dlData))}catch(e){}}
+function addDeadline(){
+  dlData.push({title:'',mechanism:'',date:'',status:'Planning',notes:''});
+  renderDL();saveDL();
+}
+function renderDL(){
+  const c=$('dl-list');
+  if(!dlData.length){c.innerHTML='<p style="color:var(--ink-mt);font-size:.86rem">No custom deadlines yet. Add your upcoming submissions above.</p>';return}
+  // Sort by date
+  const sorted=[...dlData].map((d,i)=>({...d,_i:i})).sort((a,b)=>(a.date||'z').localeCompare(b.date||'z'));
+  const now=today();
+  c.innerHTML=sorted.map(d=>{
+    const i=d._i;
+    const isPast=d.date&&d.date<now;
+    const isClose=d.date&&!isPast&&(new Date(d.date)-new Date())<30*24*60*60*1000;
+    const days=d.date?Math.ceil((new Date(d.date)-new Date())/(24*60*60*1000)):null;
+    const stCls=d.status==='Submitted'||d.status==='Awarded'?'bdg-ok':d.status==='Writing'?'bdg-ip':d.status==='Planning'?'bdg-ns':'bdg-nr';
+    return `<div style="border:1px solid ${isClose?'var(--or)':isPast?'var(--brd-lt)':'var(--brd)'};border-radius:var(--r-md);padding:.7rem .9rem;margin-bottom:.5rem;background:${isPast?'#fafafa':'var(--card)'};${isPast?'opacity:.6':''}">
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <span class="bdg ${stCls}">${d.status}</span>
+        <input type="text" value="${esc(d.title)}" onchange="dlData[${i}].title=this.value;saveDL()" placeholder="Grant title" style="flex:2;font-size:.88rem;font-weight:600;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px;min-width:150px">
+        <input type="text" value="${esc(d.mechanism)}" onchange="dlData[${i}].mechanism=this.value;saveDL()" placeholder="Mechanism" style="width:70px;font-size:.84rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px">
+        <input type="date" value="${d.date}" onchange="dlData[${i}].date=this.value;renderDL();saveDL()" style="font-size:.82rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px">
+        <select onchange="dlData[${i}].status=this.value;renderDL();saveDL()" style="font-size:.82rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px">
+          ${['Planning','Writing','Submitted','Under Review','Awarded','Not Funded'].map(s=>'<option'+(s===d.status?' selected':'')+'>'+s+'</option>').join('')}
+        </select>
+        ${days!==null&&!isPast?`<span style="font-size:.78rem;font-weight:600;color:${isClose?'var(--or)':'var(--ink-mt)'}">${days}d</span>`:''}
+        <button class="btn btn-gh btn-sm" onclick="dlData.splice(${i},1);renderDL();saveDL()">Remove</button>
+      </div>
+      <input type="text" value="${esc(d.notes)}" onchange="dlData[${i}].notes=this.value;saveDL()" placeholder="Notes (FOA number, institute, etc.)" style="width:100%;margin-top:.3rem;font-size:.82rem;padding:.2rem .4rem;border:1px solid var(--brd);border-radius:5px;color:var(--ink-lt)">
+    </div>`}).join('');
+}
+
 /* ═══ INIT ═══ */
 window.addEventListener('DOMContentLoaded',()=>{
   const loaded=loadM();if(!loaded)buildMMatrix();
   renderGoals();renderCerts();renderPubs();renderConfs();renderTeach();renderMtgs();renderMS();renderNet();
   loadTL();renderTL();
+  loadGT();renderGanttItems();renderGanttMS();renderGantt();
+  loadSA();loadDL();renderDL();
   loadPI();
 });
 </script>
