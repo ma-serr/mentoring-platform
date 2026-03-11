@@ -227,4 +227,4 @@ If you use this platform in a publication or grant application:
 Assistant Professor of Medicine
 Center for Regenerative Medicine (CReM)
 Boston University Chobanian & Avedisian School of Medicine
-[serranolab.org](https://www.serranolab.org)
+[serranolab.org](https://serranolab.github.io/online/)
