@@ -922,8 +922,7 @@ thead th:first-child{text-align:left}
 td:first-child{font-weight:600;color:#4a5c72;font-size:9pt;background:#f8fafd;white-space:nowrap}
 tbody tr:nth-child(even){background:#fafcfe}
 .eff{display:flex;align-items:center;gap:6px}
-.eff-bg{flex:1;background:#ecf0f4;border-radius:20px;height:7px;overflow:hidden}
-.eff-bar{height:7px;border-radius:20px}
+.eff svg{flex:1;height:10px;border-radius:20px;overflow:visible}
 .eff-pct{font-size:8.5pt;font-weight:600;color:#4a5c72;min-width:30px;text-align:right}
 .total td{font-weight:700;background:#eef4f8;text-align:center;font-size:10pt;border-top:2px solid #b0c0d0}
 .total .ok{color:#2a9d8f}
@@ -936,7 +935,7 @@ tbody tr:nth-child(even){background:#fafcfe}
 .actions button{font-family:inherit;font-size:10pt;font-weight:600;padding:6px 18px;border-radius:6px;cursor:pointer;border:none}
 .btn-print{background:#1a4f7a;color:#fff}
 .btn-print:hover{background:#163d60}
-@media print{.actions{display:none!important}.cite{display:block!important}
+@media print{.actions{display:none!important}.actions+div{display:none!important}.cite{display:block!important}
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
 </style></head><body>`;
@@ -955,7 +954,7 @@ tbody tr:nth-child(even){background:#fafcfe}
     h+=`<tr><td>${row.label}</td>`;
     if(row.type==='effort'){
       row.cells.forEach(val=>{
-        h+=`<td><div class="eff"><div class="eff-bg"><div class="eff-bar" style="width:${val}%;background:${row.color||'#2176ae'}"></div></div><span class="eff-pct">${val}%</span></div></td>`;
+        h+=`<td><div class="eff"><svg viewBox="0 0 200 10" preserveAspectRatio="none"><rect x="0" y="0" width="200" height="10" rx="5" fill="#ecf0f4"/><rect x="0" y="0" width="${val*2}" height="10" rx="5" fill="${row.color||'#2176ae'}"/></svg><span class="eff-pct">${val}%</span></div></td>`;
       });
     }else{
       row.cells.forEach(val=>{
@@ -975,9 +974,9 @@ tbody tr:nth-child(even){background:#fafcfe}
 
   // Legend
   h+=`<div class="legend">
-    <span><span class="dot" style="background:#2176ae"></span> Research</span>
-    <span><span class="dot" style="background:#2a9d8f"></span> Clinical</span>
-    <span><span class="dot" style="background:#e8723a"></span> Activities / Other</span>
+    <span><svg width="8" height="8"><circle cx="4" cy="4" r="4" fill="#2176ae"/></svg> Research</span>
+    <span><svg width="8" height="8"><circle cx="4" cy="4" r="4" fill="#2a9d8f"/></svg> Clinical</span>
+    <span><svg width="8" height="8"><circle cx="4" cy="4" r="4" fill="#e8723a"/></svg> Activities / Other</span>
   </div>`;
 
   // Citation
@@ -985,6 +984,7 @@ tbody tr:nth-child(even){background:#fafcfe}
 
   // Print button (hidden when printing)
   h+=`<div class="actions"><button class="btn-print" onclick="window.print()">Print / Save as PDF</button></div>`;
+  h+=`<div style="text-align:center;font-size:7.5pt;color:#aaa;margin-top:.5rem">Tip: In the print dialog, check <strong>"Background graphics"</strong> (Chrome/Edge) or <strong>"Print backgrounds"</strong> (Safari/Firefox) to preserve header colors.</div>`;
 
   h+=`</body></html>`;
 
