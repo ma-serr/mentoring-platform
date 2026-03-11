@@ -380,7 +380,7 @@ body.hc{background:#0d1117!important;color:#e6edf3!important}body.hc .topbar{bac
 
       <!-- Export -->
       <div class="brow" style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--brd-lt)">
-        <button class="btn btn-p" onclick="exportTLPrint()">Print Timeline / PDF</button>
+        <button class="btn btn-p" onclick="exportTLPrint()">Preview &amp; Print Timeline</button>
         <button class="btn btn-ol" onclick="exportTLText()">Export as Text</button>
       </div>
 
@@ -903,19 +903,93 @@ function resetTLToDefault(){
 
 function exportTLPrint(){
   saveTL();
-  // Auto-expand all textareas to show full content for print
-  document.querySelectorAll('#tl-wrap textarea').forEach(ta=>{
-    ta.style.height='auto';
-    ta.style.height=ta.scrollHeight+'px';
+  if(!tlData)return;
+  const nc=tlData.cols.length;
+  const nm=$('m-name').value.trim()||'';
+
+  // Build clean static HTML
+  let h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${tlData.title||'Career Timeline'}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3','Source Sans Pro',system-ui,sans-serif;color:#1a2332;padding:1.5rem;max-width:1100px;margin:0 auto}
+@page{size:landscape;margin:1.2cm}
+table{width:100%;border-collapse:collapse;font-size:9.5pt}
+th,td{border:1px solid #d0d8e0;padding:6px 8px;vertical-align:top;text-align:left}
+thead th{background:#1a4f7a;color:#fff;font-weight:600;font-size:9pt;letter-spacing:.02em;text-align:center}
+thead th:first-child{text-align:left}
+.title-row th{font-size:13pt;padding:10px 12px;font-family:'Bitter',Georgia,serif;text-align:center;letter-spacing:0}
+.title-row .sub{font-size:9.5pt;font-weight:400;opacity:.85;display:block;margin-top:2px}
+td:first-child{font-weight:600;color:#4a5c72;font-size:9pt;background:#f8fafd;white-space:nowrap}
+tbody tr:nth-child(even){background:#fafcfe}
+.eff{display:flex;align-items:center;gap:6px}
+.eff-bg{flex:1;background:#ecf0f4;border-radius:20px;height:7px;overflow:hidden}
+.eff-bar{height:7px;border-radius:20px}
+.eff-pct{font-size:8.5pt;font-weight:600;color:#4a5c72;min-width:30px;text-align:right}
+.total td{font-weight:700;background:#eef4f8;text-align:center;font-size:10pt;border-top:2px solid #b0c0d0}
+.total .ok{color:#2a9d8f}
+.total .warn{color:#e76f51}
+.legend{display:flex;gap:1.2rem;margin-top:.8rem;font-size:8pt;color:#8a97a8;align-items:center}
+.legend span{display:flex;align-items:center;gap:4px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.cite{margin-top:1rem;font-size:7.5pt;color:#8a97a8;border-top:1px solid #e0e0e0;padding-top:.5rem;text-align:center}
+.actions{margin-top:1rem;display:flex;gap:.5rem;justify-content:center}
+.actions button{font-family:inherit;font-size:10pt;font-weight:600;padding:6px 18px;border-radius:6px;cursor:pointer;border:none}
+.btn-print{background:#1a4f7a;color:#fff}
+.btn-print:hover{background:#163d60}
+@media print{.actions{display:none!important}.cite{display:block!important}}
+</style></head><body>`;
+
+  // Table
+  h+=`<table>`;
+  if(tlData.title){
+    h+=`<thead><tr class="title-row"><th colspan="${nc+1}">${tlData.title}${nm?'<span class="sub">'+nm+'</span>':''}</th></tr>`;
+  }else{h+=`<thead>`}
+
+  h+=`<tr><th></th>`;
+  tlData.cols.forEach(col=>{h+=`<th>${col.replace(/\n/g,'<br>')}</th>`});
+  h+=`</tr></thead><tbody>`;
+
+  tlData.rows.forEach(row=>{
+    h+=`<tr><td>${row.label}</td>`;
+    if(row.type==='effort'){
+      row.cells.forEach(val=>{
+        h+=`<td><div class="eff"><div class="eff-bg"><div class="eff-bar" style="width:${val}%;background:${row.color||'#2176ae'}"></div></div><span class="eff-pct">${val}%</span></div></td>`;
+      });
+    }else{
+      row.cells.forEach(val=>{
+        h+=`<td>${(val||'').replace(/\n/g,'<br>')}</td>`;
+      });
+    }
+    h+=`</tr>`;
   });
-  // Add print-tl class to isolate timeline
-  document.body.classList.add('print-tl');
-  // Small delay to let styles apply, then print
-  setTimeout(()=>{
-    window.print();
-    // Remove class after print dialog closes
-    setTimeout(()=>document.body.classList.remove('print-tl'),500);
-  },100);
+
+  // Total row
+  h+=`<tr class="total"><td>Total Effort (%)</td>`;
+  for(let ci=0;ci<nc;ci++){
+    let sum=0;tlData.rows.forEach(r=>{if(r.type==='effort')sum+=(r.cells[ci]||0)});
+    h+=`<td class="${sum===100?'ok':'warn'}">${sum}%</td>`;
+  }
+  h+=`</tr></tbody></table>`;
+
+  // Legend
+  h+=`<div class="legend">
+    <span><span class="dot" style="background:#2176ae"></span> Research</span>
+    <span><span class="dot" style="background:#2a9d8f"></span> Clinical</span>
+    <span><span class="dot" style="background:#e8723a"></span> Activities / Other</span>
+  </div>`;
+
+  // Citation
+  h+=`<div class="cite">Generated with the Serrano Lab Mentoring & Training Platform · Serrano, M.A. & Claude (Anthropic) · github.com/ma-serr/mentoring-platform · CC BY 4.0</div>`;
+
+  // Print button (hidden when printing)
+  h+=`<div class="actions"><button class="btn-print" onclick="window.print()">Print / Save as PDF</button></div>`;
+
+  h+=`</body></html>`;
+
+  // Open in new window
+  const win=window.open('','_blank','width=1100,height=700');
+  win.document.write(h);
+  win.document.close();
 }
 
 function exportTLText(){
