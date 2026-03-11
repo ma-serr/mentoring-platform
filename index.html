@@ -936,7 +936,9 @@ tbody tr:nth-child(even){background:#fafcfe}
 .actions button{font-family:inherit;font-size:10pt;font-weight:600;padding:6px 18px;border-radius:6px;cursor:pointer;border:none}
 .btn-print{background:#1a4f7a;color:#fff}
 .btn-print:hover{background:#163d60}
-@media print{.actions{display:none!important}.cite{display:block!important}}
+@media print{.actions{display:none!important}.cite{display:block!important}
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
 </style></head><body>`;
 
   // Table
