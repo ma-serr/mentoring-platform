@@ -4,7 +4,7 @@
 
 **A structured, open-source mentoring tool for academic research labs — designed with NIH training plan requirements in mind.**
 
-Built for the [Serrano Laboratory](https://www.serranolab.org) at Boston University's Chobanian & Avedisian School of Medicine, Center for Regenerative Medicine (CReM).
+Built for the [Serrano Laboratory](https://serranolab.github.io/online/#home) at Boston University's Chobanian & Avedisian School of Medicine, Center for Regenerative Medicine (CReM).
 
 ---
 
@@ -229,4 +229,4 @@ If you use this platform in a publication or grant application:
 Assistant Professor of Medicine
 Center for Regenerative Medicine (CReM)
 Boston University Chobanian & Avedisian School of Medicine
-[serranolab.org](https://www.serranolab.org)
+[serranolab.org](https://serranolab.github.io/online/#home)
